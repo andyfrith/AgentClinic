@@ -5,6 +5,7 @@
 Vertical slice of the Agent Profile feature: data model, API, and UI for viewing agents.
 
 ### In scope
+- Minimal AgentClinic home page (branding, tagline, CTA to agents)
 - Agent data model & Drizzle schema (name, avatar, specialty, status, bio)
 - Database migration and seed data with sample agents
 - REST API routes for listing and viewing agents
@@ -19,6 +20,7 @@ Vertical slice of the Agent Profile feature: data model, API, and UI for viewing
 
 ## Design Decisions
 
+- **Home page** is a simple branded landing page — the clinic name, a playful tagline, and a single CTA button to the agent directory
 - **Status indicator** uses a colored dot (green=active, yellow=idle, red=busy, gray=offline) with Framer Motion pulse animation
 - **Avatars** are generated as initials on a colored background (no image uploads yet)
 - **Specialties** displayed as tags/badges via shadcn/ui

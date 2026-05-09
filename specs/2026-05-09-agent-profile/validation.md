@@ -20,6 +20,8 @@ All criteria must pass before the branch can be merged.
 - [ ] `GET /api/agents/999999` returns 404 for non-existent agent
 
 ### UI
+- [ ] `/` renders the AgentClinic home page with branding and a "View Agents" CTA
+- [ ] Clicking the CTA navigates to `/agents`
 - [ ] `/agents` page renders a list of agent cards
 - [ ] Each card shows avatar, name, specialty, and status indicator
 - [ ] Clicking a card navigates to `/agents/[id]`
@@ -29,7 +31,8 @@ All criteria must pass before the branch can be merged.
 - [ ] Pages render correctly at 375px, 768px, and 1280px viewport widths
 
 ### Manual Walkthrough
-- [ ] Open browser at `localhost:3000`, navigate to `/agents`
+- [ ] Open browser at `localhost:3000`, see the AgentClinic home page
+- [ ] Click "View Agents" CTA, verify navigation to `/agents`
 - [ ] Verify all seeded agents appear with correct data
 - [ ] Click into a detail page, verify full profile renders
 - [ ] Verify status indicator colors match agent status
