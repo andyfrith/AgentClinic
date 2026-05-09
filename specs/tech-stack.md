@@ -13,6 +13,8 @@
 | Component Library | shadcn/ui |
 | Styling | Tailwind CSS |
 | Animation | Framer Motion |
+| Unit Testing | Vitest |
+| E2E Testing | Playwright |
 | UX | Great animation & polish throughout |
 
 ## Principles
