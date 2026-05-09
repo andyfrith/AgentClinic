@@ -2,6 +2,8 @@
 
 Run before merging any branch to ensure all quality gates pass.
 
+**Rule: All work must be done on a branch separate from `main`.** No commits, changes, or code generation should ever be made directly on `main`. Every change — regardless of size — must originate from a dedicated branch (e.g. `feat/...`, `fix/...`, `chore/...`).
+
 ## Prerequisites
 
 - Node modules installed (`npm install`)
@@ -116,8 +118,15 @@ scripts/update-changelog.sh -
 
 ---
 
+## Branch policy
+
+- **Never commit directly to `main`.** All changes — code, docs, config, screenshots, seeds, migrations — must go through a branch.
+- Branch naming convention: `<type>/<short-description>` (e.g. `feat/agent-filter`, `fix/avatar-loading`, `chore/update-deps`, `docs/api-readme`).
+- The only exception is an emergency hotfix on a release branch, which still bypasses `main` directly.
+
 ## Pre-merge checklist
 
+- [ ] Changes are on a branch (not `main`) — verify with `git branch --show-current`
 - [ ] Updated `README.md` if project info, setup, or features changed
 - [ ] `npm run validate` passes (typecheck + lint + format + unit tests)
 - [ ] `npm run test:e2e` passes (all Playwright tests)
