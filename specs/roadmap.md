@@ -8,6 +8,7 @@ Each phase delivers a **vertical slice** — data model, API, and UI — for a c
 - API routes for listing & viewing agents
 - Dashboard agent list page + detail page
 - Agent profile card component with status indicator
+- **Responsive design** — all views adapt to mobile, tablet, and desktop viewports
 
 ## Phase 2: Ailments & Therapies
 - Ailment data model (name, description, severity, category)
@@ -34,7 +35,6 @@ Each phase delivers a **vertical slice** — data model, API, and UI — for a c
 
 ## Phase 5: Polish & Deploy
 - Loading states, empty states, error boundaries
-- Responsive design pass
 - Framer Motion page transitions & micro-interactions
 - Meta tags, favicon, SEO basics
 - Production database setup & deployment

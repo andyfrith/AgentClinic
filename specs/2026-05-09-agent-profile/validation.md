@@ -8,6 +8,13 @@ All criteria must pass before the branch can be merged.
 - [x] `npx tsc --noEmit` produces zero errors
 - [x] `npm run lint` passes with no warnings
 
+### Tests
+- [x] `npm run test:run` (vitest) — all unit tests pass
+- [x] `npx playwright test` — all e2e tests pass
+- [x] Unit tests cover utility functions (`lib/`), hooks, and components
+- [x] E2E tests cover main user flows: homepage, agent list, agent detail
+- [x] E2E tests verify responsive design (no horizontal overflow at 375px, 768px, 1280px)
+
 ### Database
 - [x] `docker compose up` starts PostgreSQL without errors
 - [x] Drizzle migration runs successfully (`npm run db:migrate`)

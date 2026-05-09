@@ -76,15 +76,15 @@ export default function AgentDetailPage() {
           &larr; Back to Agents
         </Link>
 
-        <div className="mt-6 flex items-center gap-6">
-          <Avatar className="h-16 w-16">
+        <div className="mt-6 flex flex-col items-center text-center sm:flex-row sm:items-start sm:text-left gap-4 sm:gap-6">
+          <Avatar className="h-16 w-16 sm:h-20 sm:w-20">
             <AvatarFallback className="text-2xl font-semibold">
               {agent.avatar || agent.name.slice(0, 2).toUpperCase()}
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-3xl font-bold">{agent.name}</h1>
+            <div className="flex items-center justify-center sm:justify-start gap-3">
+              <h1 className="text-2xl sm:text-3xl font-bold">{agent.name}</h1>
               <StatusIndicator status={agent.status} />
             </div>
             <Badge variant="secondary" className="mt-1">

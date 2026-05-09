@@ -12,11 +12,26 @@ Vertical slice of the Agent Profile feature: data model, API, and UI for viewing
 - Dashboard agent list page with `AgentCard` components
 - Agent detail page with full profile information
 - Profile card component with visual status indicator
+- Unit test suite covering utility functions, schema, hooks, and components
+- E2E test suite covering homepage, agent list, and agent detail flows
+- Responsive viewport e2e tests (375px, 768px, 1280px)
 
 ### Out of scope
 - Editing / creating agents (admin features — Phase 4)
 - Search or filtering (future enhancement)
 - Authentication or authorization
+
+## Responsive Design
+
+All pages must render correctly across three viewport widths without horizontal overflow or broken layouts:
+
+| Breakpoint | Width  | Target                    |
+|------------|--------|---------------------------|
+| Mobile     | 375px  | iPhone SE / small phones  |
+| Tablet     | 768px  | iPad portrait             |
+| Desktop    | 1280px | Standard laptop           |
+
+Responsive behavior uses Tailwind breakpoints (`sm:`, `md:`, `lg:`). Content reflows on mobile by stacking flex layouts vertically, text sizes scale down, and touch targets stay ≥ 44px. No horizontal scrolling should occur at any viewport width.
 
 ## Design Decisions
 
