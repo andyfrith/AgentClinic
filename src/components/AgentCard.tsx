@@ -4,12 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusIndicator } from "./StatusIndicator";
 import type { Agent } from "@/db/schema";
 
@@ -34,9 +29,7 @@ export function AgentCard({ agent }: { agent: Agent }) {
             <StatusIndicator status={agent.status} />
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-muted-foreground line-clamp-2">
-              {agent.bio}
-            </p>
+            <p className="text-sm text-muted-foreground line-clamp-2">{agent.bio}</p>
           </CardContent>
         </Card>
       </motion.div>

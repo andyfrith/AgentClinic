@@ -24,9 +24,7 @@ describe("AgentCard", () => {
 
   it("renders agent bio", () => {
     render(<AgentCard agent={mockAgent} />);
-    expect(
-      screen.getByText("Experienced cardiologist with 15 years.")
-    ).toBeInTheDocument();
+    expect(screen.getByText("Experienced cardiologist with 15 years.")).toBeInTheDocument();
   });
 
   it("renders avatar fallback with initials", () => {

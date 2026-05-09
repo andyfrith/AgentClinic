@@ -1,13 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { QueryClient, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Providers } from "../Providers";
-
-function TestConsumer() {
-  const queryClient = new QueryClient();
-  const isDefault = queryClient.getQueryDefaults("test") !== undefined;
-  return <div data-testid="result">{String(isDefault)}</div>;
-}
 
 describe("Providers", () => {
   it("renders children", () => {
@@ -22,7 +16,7 @@ describe("Providers", () => {
   it("provides a QueryClient to children", () => {
     function QueryConsumer() {
       const { data } = useQuery({
-        queryKey: ["test-key"],
+        queryKey: ["test-key"] as const,
         queryFn: async () => "test-data",
         enabled: false,
       });

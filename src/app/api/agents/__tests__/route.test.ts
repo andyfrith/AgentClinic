@@ -12,8 +12,22 @@ vi.mock("@/db", () => ({
 let mockAgentsResult: unknown[] = [];
 
 const mockAgents = [
-  { id: 1, name: "Dr. Smith", specialty: "Cardiology", status: "active", avatar: "", bio: "A cardiologist." },
-  { id: 2, name: "Dr. Jones", specialty: "Neurology", status: "idle", avatar: "", bio: "A neurologist." },
+  {
+    id: 1,
+    name: "Dr. Smith",
+    specialty: "Cardiology",
+    status: "active",
+    avatar: "",
+    bio: "A cardiologist.",
+  },
+  {
+    id: 2,
+    name: "Dr. Jones",
+    specialty: "Neurology",
+    status: "idle",
+    avatar: "",
+    bio: "A neurologist.",
+  },
 ];
 
 beforeEach(() => {
@@ -30,9 +44,7 @@ describe("GET /api/agents", () => {
   });
 
   it("accepts optional status query param", async () => {
-    const response = await GET(
-      new Request("http://localhost/api/agents?status=active")
-    );
+    const response = await GET(new Request("http://localhost/api/agents?status=active"));
     expect(response.status).toBe(200);
   });
 
