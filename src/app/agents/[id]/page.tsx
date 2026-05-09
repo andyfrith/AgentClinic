@@ -100,9 +100,7 @@ export default function AgentDetailPage() {
 
         <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
           <span>Status:</span>
-          <span className="capitalize font-medium text-foreground">
-            {agent.status}
-          </span>
+          <span className="capitalize font-medium text-foreground">{agent.status}</span>
         </div>
       </motion.div>
     </div>

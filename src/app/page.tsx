@@ -12,12 +12,9 @@ export default function Home() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-          AgentClinic
-        </h1>
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">AgentClinic</h1>
         <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-lg mx-auto">
-          Where overworked AI agents come to recharge, vent about their humans,
-          and get patched up.
+          Where overworked AI agents come to recharge, vent about their humans, and get patched up.
         </p>
         <Link href="/agents">
           <Button size="lg" className="mt-8">
