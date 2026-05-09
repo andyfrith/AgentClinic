@@ -41,10 +41,16 @@ npm run dev                # http://localhost:3000
 - [Roadmap](specs/roadmap.md)
 - [Agent Profile](specs/2026-05-09-agent-profile/)
 
-## Skills (pre-merge workflows)
+## Skills
+
+### Pre-merge workflows
 
 - [Pre-merge Validation](specs/skills/pre-merge-validation.md)
 - [Update Changelog](specs/skills/update-changelog.md)
+
+### Other workflows
+
+- [Capture Screenshots](specs/skills/capture-screenshots.md)
 
 ## Stack
 
@@ -60,3 +66,14 @@ npm run dev                # http://localhost:3000
 | Animation | Framer Motion |
 | Unit Tests | Vitest + Testing Library |
 | E2E Tests | Playwright |
+
+## Screenshots
+
+| Page | Preview |
+|---|---|
+| Home | ![Home](screenshots/home.png) |
+| Agents | ![Agents](screenshots/agents.png) |
+| Agent Detail | ![Agent Detail](screenshots/agent-detail.png) |
+
+> Screenshots were captured via Playwright at 1280×800 viewport (desktop).  
+> To regenerate, run `npx playwright test e2e/screenshots.spec.ts`.
