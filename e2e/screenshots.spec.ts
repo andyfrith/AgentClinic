@@ -169,4 +169,93 @@ test.describe("Screenshot capture", () => {
       fullPage: true,
     });
   });
+
+  const staffMember = JSON.stringify({
+    id: 1,
+    name: "Dr. Ada",
+    role: "admin",
+    avatar: "DA",
+    specialties: ["Cognitive", "Runtime", "Emotional"],
+  });
+
+  test("Staff login page", async ({ page }) => {
+    await page.goto("/staff/login");
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByText("Welcome to AgentClinic")).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "staff-login.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Staff dashboard", async ({ page }) => {
+    await page.addInitScript((member) => {
+      localStorage.setItem("staff", member);
+    }, staffMember);
+
+    await page.goto("/staff");
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByText("Dr. Ada's Dashboard")).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "staff-dashboard.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Staff agents management page", async ({ page }) => {
+    await page.addInitScript((member) => {
+      localStorage.setItem("staff", member);
+    }, staffMember);
+
+    await page.goto("/staff/agents");
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "Manage Agents" })).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "staff-agents.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Staff ailments management page", async ({ page }) => {
+    await page.addInitScript((member) => {
+      localStorage.setItem("staff", member);
+    }, staffMember);
+
+    await page.goto("/staff/ailments");
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "Manage Ailments" })).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "staff-ailments.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Staff therapies management page", async ({ page }) => {
+    await page.addInitScript((member) => {
+      localStorage.setItem("staff", member);
+    }, staffMember);
+
+    await page.goto("/staff/therapies");
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "Manage Therapies" })).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "staff-therapies.png"),
+      fullPage: true,
+    });
+  });
 });
