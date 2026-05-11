@@ -20,6 +20,41 @@ All notable changes to this project are documented below.
 - Wait for framer-motion animations to complete before capturing
 - Verify content visibility with opacity assertions before capture
 
+
+### Specs
+- Add Phase 2 feature spec for Ailments & Therapies (requirements, plan, validation)
+
+### Data Model
+- Add `ailments`, `therapies`, `agent_ailments`, and `ailment_therapies` tables to Drizzle schema
+- Add severity enum (`mild`, `moderate`, `severe`) and text array column for therapy side effects
+- Seed database with 8 ailments, 8 therapies, and cross-links to existing agents
+
+### API
+- Add `GET /api/ailments` and `GET /api/ailments/[id]` endpoints with Zod validation
+- Add `GET /api/therapies` and `GET /api/therapies/[id]` endpoints with Zod validation
+- Include linked agents and therapies in ailment detail response
+- Include linked ailments in therapy detail response
+- Update `GET /api/agents/[id]` to include agent's diagnosed ailments
+
+### UI
+- Add Ailments list page (`/ailments`) with severity badges and category tags
+- Add Ailment detail page (`/ailments/[id]`) showing affected agents and recommended therapies
+- Add Therapies catalog page (`/therapies`) with duration and side-effect previews
+- Add Therapy detail page (`/therapies/[id]`) showing treated ailments and side effects
+- Add "Diagnoses" section to agent detail page with links to ailment pages
+- Add `AilmentCard`, `TherapyCard`, and `SeverityBadge` components
+- Add Ailments and Therapies links to dashboard header navigation
+
+### Tests
+- Add 47 unit tests: schema (ailments, therapies, joins), API routes, TanStack Query hooks, SeverityBadge, AilmentCard, TherapyCard
+- Add Playwright e2e tests for ailments list/detail and therapies list/detail flows
+- Add responsive viewport e2e coverage for new pages
+- All 84 unit tests and 7 screenshot tests passing
+
+### Screenshots
+- Add screenshots for Ailments list, Ailment detail, Therapies list, and Therapy detail pages
+- Update README.md preview table with all new page screenshots
+
 ## 2026-05-09
 
 ### Initial commit
