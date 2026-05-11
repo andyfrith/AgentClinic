@@ -5,9 +5,7 @@ test.describe("AgentClinic E2E", () => {
     await page.goto("/");
 
     await expect(page.getByRole("heading", { name: "AgentClinic" })).toBeVisible();
-    await expect(
-      page.getByText(/overworked AI agents come to recharge/)
-    ).toBeVisible();
+    await expect(page.getByText(/overworked AI agents come to recharge/)).toBeVisible();
 
     await page.getByRole("link", { name: "View Agents" }).click();
     await expect(page).toHaveURL("/agents");
@@ -81,30 +79,42 @@ test.describe("Responsive Design", () => {
   ];
 
   for (const vp of viewports) {
-    test(`homepage renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({ page }) => {
+    test(`homepage renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto("/");
       await expect(page.getByRole("heading", { name: "AgentClinic" })).toBeVisible();
-      const overflowW = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+      const overflowW = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+      );
       expect(overflowW).toBe(false);
     });
 
-    test(`agents page renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({ page }) => {
+    test(`agents page renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto("/agents");
       await page.waitForSelector("a[href^='/agents/']", { timeout: 10000 });
-      const overflowW = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+      const overflowW = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+      );
       expect(overflowW).toBe(false);
     });
 
-    test(`agent detail page renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({ page }) => {
+    test(`agent detail page renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({
+      page,
+    }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto("/agents");
       const agentLink = page.locator("a[href^='/agents/']").first();
       await agentLink.waitFor({ state: "visible", timeout: 10000 });
       await agentLink.click();
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-      const overflowW = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
+      const overflowW = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+      );
       expect(overflowW).toBe(false);
     });
   }

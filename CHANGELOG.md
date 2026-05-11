@@ -2,6 +2,24 @@
 
 All notable changes to this project are documented below.
 
+
+## 2026-05-11
+
+### Specs
+- Add branch policy requiring all work on branches separate from master
+- Add `capture-screenshots` skill documenting the screenshot workflow
+- Add due diligence rule to pre-merge validation
+
+### Docs
+- Add AGENTS.md with due diligence instructions, branch policy, and project conventions
+- Add Screenshots section to README.md with page preview table
+
+### Screenshots
+- Add Playwright spec to capture desktop screenshots of all app pages
+- Add screenshots for Home, Agents List, and Agent Detail pages
+- Wait for framer-motion animations to complete before capturing
+- Verify content visibility with opacity assertions before capture
+
 ## 2026-05-09
 
 ### Initial commit
