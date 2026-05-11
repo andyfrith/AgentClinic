@@ -5,18 +5,21 @@ import fs from "fs";
 const SCREENSHOT_DIR = path.resolve(__dirname, "..", "screenshots");
 
 async function waitForAnimations(page: import("@playwright/test").Page) {
-  await page.waitForFunction(() => {
-    const all = document.querySelectorAll<HTMLElement>("[style*='opacity']");
-    for (const el of all) {
-      const raw = el.getAttribute("style") || "";
-      const m = raw.match(/opacity:\s*([\d.]+)/);
-      if (m) {
-        const v = parseFloat(m[1]);
-        if (!isNaN(v) && v > 0 && v < 1) return false;
+  await page.waitForFunction(
+    () => {
+      const all = document.querySelectorAll<HTMLElement>("[style*='opacity']");
+      for (const el of all) {
+        const raw = el.getAttribute("style") || "";
+        const m = raw.match(/opacity:\s*([\d.]+)/);
+        if (m) {
+          const v = parseFloat(m[1]);
+          if (!isNaN(v) && v > 0 && v < 1) return false;
+        }
       }
-    }
-    return true;
-  }, { timeout: 8000 });
+      return true;
+    },
+    { timeout: 8000 }
+  );
 }
 
 test.describe("Screenshot capture", () => {
