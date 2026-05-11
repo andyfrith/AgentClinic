@@ -21,12 +21,16 @@ npx playwright test e2e/screenshots.spec.ts
 
 This runs a Playwright spec at `e2e/screenshots.spec.ts` that:
 - Sets viewport to 1280×800 (desktop)
-- Navigates to each page: Home (`/`), Agents (`/agents`), Agent Detail (`/agents/[id]`)
+- Navigates to each page: Home (`/`), Agents (`/agents`), Agent Detail (`/agents/[id]`), Ailments (`/ailments`), Ailment Detail (`/ailments/[id]`), Therapies (`/therapies`), Therapy Detail (`/therapies/[id]`)
 - Waits for network idle and framer-motion entrance animations to complete
 - Saves full-page PNGs to `screenshots/`:
   - `screenshots/home.png`
   - `screenshots/agents.png`
   - `screenshots/agent-detail.png`
+  - `screenshots/ailments.png`
+  - `screenshots/ailment-detail.png`
+  - `screenshots/therapies.png`
+  - `screenshots/therapy-detail.png`
 
 ### 2. Update README
 

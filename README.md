@@ -70,10 +70,14 @@ npm run dev                # http://localhost:3000
 ## Screenshots
 
 | Page | Preview |
-|---|---|
+|---|---|---|
 | Home | ![Home](screenshots/home.png) |
 | Agents | ![Agents](screenshots/agents.png) |
 | Agent Detail | ![Agent Detail](screenshots/agent-detail.png) |
+| Ailments | ![Ailments](screenshots/ailments.png) |
+| Ailment Detail | ![Ailment Detail](screenshots/ailment-detail.png) |
+| Therapies | ![Therapies](screenshots/therapies.png) |
+| Therapy Detail | ![Therapy Detail](screenshots/therapy-detail.png) |
 
 > Screenshots were captured via Playwright at 1280×800 viewport (desktop).  
 > To regenerate, run `npx playwright test e2e/screenshots.spec.ts`.

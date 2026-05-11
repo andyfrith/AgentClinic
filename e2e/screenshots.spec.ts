@@ -85,4 +85,82 @@ test.describe("Screenshot capture", () => {
       fullPage: true,
     });
   });
+
+  test("Ailments list page", async ({ page }) => {
+    await page.goto("/ailments");
+    await page.waitForLoadState("networkidle");
+    await page.locator("a[href^='/ailments/']").first().waitFor({ state: "visible", timeout: 10000 });
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "Ailments" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Ailments" })).toHaveCSS("opacity", "1");
+    const ailmentLink = page.locator("a[href^='/ailments/']").first();
+    await expect(ailmentLink).toBeVisible();
+    await expect(ailmentLink).toHaveCSS("opacity", "1");
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "ailments.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Ailment detail page", async ({ page }) => {
+    await page.goto("/ailments");
+    await page.waitForLoadState("networkidle");
+
+    const ailmentLink = page.locator("a[href^='/ailments/']").first();
+    await ailmentLink.waitFor({ state: "visible", timeout: 10000 });
+    const ailmentName = await ailmentLink.locator("[data-slot='card-title']").textContent();
+    await ailmentLink.click();
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { level: 1, name: ailmentName!.trim() })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCSS("opacity", "1");
+    await expect(page.getByText("Affected Agents")).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "ailment-detail.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Therapies list page", async ({ page }) => {
+    await page.goto("/therapies");
+    await page.waitForLoadState("networkidle");
+    await page.locator("a[href^='/therapies/']").first().waitFor({ state: "visible", timeout: 10000 });
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "Therapies" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Therapies" })).toHaveCSS("opacity", "1");
+    const therapyLink = page.locator("a[href^='/therapies/']").first();
+    await expect(therapyLink).toBeVisible();
+    await expect(therapyLink).toHaveCSS("opacity", "1");
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "therapies.png"),
+      fullPage: true,
+    });
+  });
+
+  test("Therapy detail page", async ({ page }) => {
+    await page.goto("/therapies");
+    await page.waitForLoadState("networkidle");
+
+    const therapyLink = page.locator("a[href^='/therapies/']").first();
+    await therapyLink.waitFor({ state: "visible", timeout: 10000 });
+    const therapyName = await therapyLink.locator("[data-slot='card-title']").textContent();
+    await therapyLink.click();
+    await page.waitForLoadState("networkidle");
+    await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { level: 1, name: therapyName!.trim() })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCSS("opacity", "1");
+    await expect(page.getByText("Side Effects")).toBeVisible();
+
+    await page.screenshot({
+      path: path.join(SCREENSHOT_DIR, "therapy-detail.png"),
+      fullPage: true,
+    });
+  });
 });
