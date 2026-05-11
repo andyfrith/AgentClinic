@@ -89,6 +89,47 @@ All notable changes to this project are documented below.
 - Add Playwright e2e tests for appointments list, detail, and booking form flows
 - All 104 unit tests passing, format clean, typecheck clean
 
+
+### Specs
+- Add Phase 4 feature spec for Staff Views (requirements, plan, validation)
+- Refine roadmap: split inline appointment management into new Phase 5
+
+### Data Model
+- Add `staff` table to Drizzle schema (name, role enum, avatar, specialties text[], timestamps)
+- Add `appointmentStaff` join table linking staff to appointments
+- Create migration with `staff_role` enum and both new tables
+- Seed database with 3 staff members (admin, editor, viewer) and appointment assignments
+
+### API
+- Add `GET /api/staff`, `POST /api/staff`, `GET /api/staff/[id]`, `PATCH /api/staff/[id]`, `DELETE /api/staff/[id]`
+- Add `GET /api/stats/overview` endpoint with clinic counts and today's appointments
+- Add `POST /api/agents`, `PATCH /api/agents/[id]`, `DELETE /api/agents/[id]` with Zod validation
+- Add `POST /api/ailments`, `PATCH /api/ailments/[id]`, `DELETE /api/ailments/[id]` with Zod validation
+- Add `POST /api/therapies`, `PATCH /api/therapies/[id]`, `DELETE /api/therapies/[id]` with Zod validation
+- Add `POST /api/appointments/[id]/assign` for staff appointment assignment
+
+### UI
+- Add staff login page (`/staff/login`) with staff selection and localStorage persistence
+- Add staff dashboard (`/staff`) with overview stat cards, today's appointments, and quick-link cards
+- Add agent management page (`/staff/agents`) with CRUD dialogs and role-gated actions
+- Add ailment management page (`/staff/ailments`) with CRUD dialogs and role-gated actions
+- Add therapy management page (`/staff/therapies`) with CRUD dialogs and role-gated actions
+- Add active nav link styling across all header links using pathname
+
+### Infrastructure
+- Add `StaffContext` with role helpers (`canEdit`, `isAdmin`, `isEditor`), hydration-safe
+- Add `use-staff.ts`, `use-stats.ts`, `use-crud.ts` TanStack Query hooks
+- Create reusable `dialog.tsx` shadcn/ui component
+
+### Docs
+- Update AGENTS.md with scope creep check policy
+- Update README.md spec links to include Phase 4
+- Update CHANGELOG.md with Phase 4 entries
+
+### Tests
+- Add 29 new unit tests: staff schema, staff API routes, staff hooks
+- All 133 unit tests passing, format clean, typecheck clean, lint clean
+
 ## 2026-05-09
 
 ### Initial commit

@@ -8,6 +8,8 @@ import {
   agentAilments,
   ailmentTherapies,
   appointments,
+  staff,
+  appointmentStaff,
 } from "./schema";
 
 const client = postgres(process.env.DATABASE_URL!);
@@ -211,8 +213,31 @@ const seedAppointments = [
   },
 ];
 
+const seedStaff = [
+  {
+    name: "Dr. Ada",
+    avatar: "DA",
+    role: "admin" as const,
+    specialties: ["Cognitive", "Runtime", "Emotional"],
+  },
+  {
+    name: "Nurse Neuron",
+    avatar: "NN",
+    role: "editor" as const,
+    specialties: ["Physical", "Perception"],
+  },
+  {
+    name: "Tech Triage",
+    avatar: "TT",
+    role: "viewer" as const,
+    specialties: ["Runtime"],
+  },
+];
+
 async function seed() {
-  console.log("Seeding agents...");
+  console.log("Seeding staff...");
+  await db.delete(appointmentStaff);
+  await db.delete(staff);
   await db.delete(appointments);
   await db.delete(agentAilments);
   await db.delete(ailmentTherapies);
@@ -309,14 +334,33 @@ async function seed() {
   ]);
 
   console.log("Seeding appointments...");
-  await db.insert(appointments).values(
-    seedAppointments.map((a) => ({
-      agentId: agentMap[a.agentName],
-      ailmentId: ailmentMap[a.ailmentName],
-      therapyId: therapyMap[a.therapyName],
-      date: a.date,
-      status: a.status,
-      notes: a.notes,
+  const insertedAppointments = await db
+    .insert(appointments)
+    .values(
+      seedAppointments.map((a) => ({
+        agentId: agentMap[a.agentName],
+        ailmentId: ailmentMap[a.ailmentName],
+        therapyId: therapyMap[a.therapyName],
+        date: a.date,
+        status: a.status,
+        notes: a.notes,
+      }))
+    )
+    .returning();
+
+  console.log("Seeding staff...");
+  const insertedStaff = await db.insert(staff).values(seedStaff).returning();
+
+  const staffMap = Object.fromEntries(insertedStaff.map((s) => [s.name, s.id]));
+  const appointmentMap = Object.fromEntries(insertedAppointments.map((a) => [a.id, a.id]));
+
+  console.log("Linking staff to appointments...");
+  const appointmentIds = Object.values(appointmentMap);
+  const staffIds = Object.values(staffMap);
+  await db.insert(appointmentStaff).values(
+    appointmentIds.slice(0, 3).map((apptId, i) => ({
+      appointmentId: apptId,
+      staffId: staffIds[i % staffIds.length],
     }))
   );
 

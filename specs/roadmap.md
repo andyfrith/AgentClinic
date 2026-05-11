@@ -29,11 +29,23 @@ Each phase delivers a **vertical slice** — data model, API, and UI — for a c
 ## Phase 4: Staff Views
 - Staff data model (name, role, avatar, specialties)
 - Staff dashboard with overview stats
-- Manage appointments (assign, reschedule, cancel)
-- Admin actions: add/edit agents, ailments, therapies
-- Role-based access (view vs. edit)
+- Staff login / selection flow
+- Admin actions: add/edit agents, ailments, therapies (CRUD dialogs)
+- Role-based UI visibility (view vs. edit)
+- Active nav link styling
 
-## Phase 5: Polish & Deploy
+## Phase 5: Dashboard Enhancements
+- Inline appointment management on staff dashboard
+  - Staff assignment per appointment
+  - Reschedule with date picker
+  - Cancel with confirmation
+  - Status change buttons (Start, Complete)
+- Role-based API enforcement (403 on unauthorized mutations)
+- Success toasts on CRUD operations
+- Unit tests for UI components (stat cards, dialogs)
+- E2E tests for staff login, dashboard, CRUD, and role-based flows
+
+## Phase 6: Polish & Deploy
 - Loading states, empty states, error boundaries
 - Framer Motion page transitions & micro-interactions
 - Meta tags, favicon, SEO basics

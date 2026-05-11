@@ -6,6 +6,8 @@ import {
   agentAilments,
   ailmentTherapies,
   appointments,
+  staff,
+  appointmentStaff,
   type Agent,
   type NewAgent,
   type Ailment,
@@ -16,6 +18,10 @@ import {
   type AilmentTherapy,
   type Appointment,
   type NewAppointment,
+  type Staff,
+  type NewStaff,
+  type AppointmentStaff,
+  type NewAppointmentStaff,
 } from "../schema";
 
 describe("agents schema", () => {
@@ -226,5 +232,83 @@ describe("appointments schema", () => {
       status: "scheduled",
     };
     expect(n.agentId).toBe(1);
+  });
+});
+
+describe("staff schema", () => {
+  it("defines all expected columns", () => {
+    expect(staff.id).toBeDefined();
+    expect(staff.name).toBeDefined();
+    expect(staff.role).toBeDefined();
+    expect(staff.avatar).toBeDefined();
+    expect(staff.specialties).toBeDefined();
+    expect(staff.createdAt).toBeDefined();
+    expect(staff.updatedAt).toBeDefined();
+  });
+
+  it("has id as a serial primary key", () => {
+    expect(staff.id.primary).toBe(true);
+    expect(staff.id.notNull).toBe(true);
+  });
+
+  it("has role with default 'viewer'", () => {
+    expect(staff.role.default).toBe("viewer");
+  });
+
+  it("has specialties as text array with default empty", () => {
+    expect(Array.isArray(staff.specialties.default)).toBe(true);
+    expect(staff.specialties.default).toHaveLength(0);
+  });
+
+  it("exports Staff type", () => {
+    const s: Staff = {
+      id: 1,
+      name: "Dr. Ada",
+      role: "admin",
+      avatar: "DA",
+      specialties: ["Cognitive"],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    expect(s.name).toBe("Dr. Ada");
+    expect(s.role).toBe("admin");
+  });
+
+  it("exports NewStaff type without id", () => {
+    const n: NewStaff = {
+      name: "Nurse Neuron",
+      role: "editor",
+    };
+    expect(n.name).toBe("Nurse Neuron");
+    expect(n.role).toBe("editor");
+  });
+});
+
+describe("appointmentStaff schema", () => {
+  it("defines all expected columns", () => {
+    expect(appointmentStaff.appointmentId).toBeDefined();
+    expect(appointmentStaff.staffId).toBeDefined();
+  });
+
+  it("has required foreign key columns", () => {
+    expect(appointmentStaff.appointmentId.notNull).toBe(true);
+    expect(appointmentStaff.staffId.notNull).toBe(true);
+  });
+
+  it("exports AppointmentStaff type", () => {
+    const a: AppointmentStaff = {
+      appointmentId: 1,
+      staffId: 2,
+    };
+    expect(a.appointmentId).toBe(1);
+    expect(a.staffId).toBe(2);
+  });
+
+  it("exports NewAppointmentStaff type", () => {
+    const n: NewAppointmentStaff = {
+      appointmentId: 1,
+      staffId: 2,
+    };
+    expect(n.appointmentId).toBe(1);
   });
 });

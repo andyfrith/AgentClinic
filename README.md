@@ -42,6 +42,7 @@ npm run dev                # http://localhost:3000
 - [Agent Profile](specs/2026-05-09-agent-profile/)
 - [Ailments & Therapies](specs/2026-05-11-ailments-therapies/)
 - [Appointment Booking](specs/2026-05-11-appointment-booking/)
+- [Staff Views](specs/2026-05-11-staff-views/)
 
 ## Skills
 
@@ -80,6 +81,11 @@ npm run dev                # http://localhost:3000
 | Ailment Detail | ![Ailment Detail](screenshots/ailment-detail.png) |
 | Therapies | ![Therapies](screenshots/therapies.png) |
 | Therapy Detail | ![Therapy Detail](screenshots/therapy-detail.png) |
+| Staff Login | ![Staff Login](screenshots/staff-login.png) |
+| Staff Dashboard | ![Staff Dashboard](screenshots/staff-dashboard.png) |
+| Staff Agents | ![Staff Agents](screenshots/staff-agents.png) |
+| Staff Ailments | ![Staff Ailments](screenshots/staff-ailments.png) |
+| Staff Therapies | ![Staff Therapies](screenshots/staff-therapies.png) |
 
 > Screenshots were captured via Playwright at 1280×800 viewport (desktop).  
 > To regenerate, run `npx playwright test e2e/screenshots.spec.ts`.

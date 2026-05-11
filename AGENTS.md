@@ -30,6 +30,16 @@ AgentClinic is a whimsical clinic management dashboard for overworked AI agents.
 - Animations should feel natural and purposeful
 - Tests required for new code (see pre-merge-validation skill for test matrix)
 
+## Scope creep check
+
+Before and during each phase, proactively watch for scope creep. Concretely:
+
+1. **At spec-drafting time** — if a planned section bundles multiple independent features (e.g., inline appointment controls that each require their own UI component, endpoint, and state management), split them into a separate subsequent phase rather than cramming them in.
+
+2. **During implementation** — if a task grows beyond its planned scope (e.g., a "quick actions" section becomes a multi-endpoint CRUD system), pause, flag it, and propose moving the excess to a new phase on the roadmap before continuing.
+
+When splitting off scope: update the roadmap by adjusting the current phase entry and inserting a new phase after it. Annotate descoped items in the current plan/validation docs with `[~]` and a `→ moved to Phase N` note. The goal is to keep each phase a cohesive vertical slice that can ship independently.
+
 ## Relevant files and directories
 
 | Path | Purpose |
