@@ -111,7 +111,9 @@ export default function TherapyDetailPage() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground line-clamp-1">{ailment.description}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-1">
+                        {ailment.description}
+                      </p>
                     </CardContent>
                   </Card>
                 </Link>

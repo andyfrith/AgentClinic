@@ -99,12 +99,16 @@ export default function AilmentDetailPage() {
                       </Avatar>
                       <div className="flex-1">
                         <CardTitle className="text-base">{agent.name}</CardTitle>
-                        <Badge variant="secondary" className="mt-0.5">{agent.specialty}</Badge>
+                        <Badge variant="secondary" className="mt-0.5">
+                          {agent.specialty}
+                        </Badge>
                       </div>
                     </CardHeader>
                     {agent.notes && (
                       <CardContent>
-                        <p className="text-sm text-muted-foreground italic">&ldquo;{agent.notes}&rdquo;</p>
+                        <p className="text-sm text-muted-foreground italic">
+                          &ldquo;{agent.notes}&rdquo;
+                        </p>
                       </CardContent>
                     )}
                   </Card>
@@ -128,7 +132,9 @@ export default function AilmentDetailPage() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground line-clamp-1">{therapy.description}</p>
+                      <p className="text-sm text-muted-foreground line-clamp-1">
+                        {therapy.description}
+                      </p>
                     </CardContent>
                   </Card>
                 </Link>
