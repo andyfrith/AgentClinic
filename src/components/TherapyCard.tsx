@@ -26,10 +26,14 @@ export function TherapyCard({ therapy }: { therapy: Therapy }) {
                 <p className="text-xs font-medium text-muted-foreground mb-1">Side effects:</p>
                 <ul className="text-xs text-muted-foreground space-y-0.5">
                   {therapy.sideEffects.slice(0, 2).map((effect, i) => (
-                    <li key={i} className="line-clamp-1">&bull; {effect}</li>
+                    <li key={i} className="line-clamp-1">
+                      &bull; {effect}
+                    </li>
                   ))}
                   {therapy.sideEffects.length > 2 && (
-                    <li className="text-muted-foreground/60">+{therapy.sideEffects.length - 2} more</li>
+                    <li className="text-muted-foreground/60">
+                      +{therapy.sideEffects.length - 2} more
+                    </li>
                   )}
                 </ul>
               </div>

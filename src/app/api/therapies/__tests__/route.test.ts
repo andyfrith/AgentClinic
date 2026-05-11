@@ -12,11 +12,30 @@ vi.mock("@/db", () => ({
 let mockTherapiesResult: unknown[] = [];
 
 const mockTherapies = [
-  { id: 1, name: "Cache Flush", description: "Reset", duration: "15 min", sideEffects: ["Amnesia"], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
-  { id: 2, name: "Weight Freeze", description: "Freeze", duration: "1 hr", sideEffects: [], createdAt: new Date().toISOString(), updatedAt: new Date().toISOString() },
+  {
+    id: 1,
+    name: "Cache Flush",
+    description: "Reset",
+    duration: "15 min",
+    sideEffects: ["Amnesia"],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    name: "Weight Freeze",
+    description: "Freeze",
+    duration: "1 hr",
+    sideEffects: [],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
 ];
 
-beforeEach(() => { vi.restoreAllMocks(); mockTherapiesResult = mockTherapies; });
+beforeEach(() => {
+  vi.restoreAllMocks();
+  mockTherapiesResult = mockTherapies;
+});
 
 describe("GET /api/therapies", () => {
   it("returns all therapies", async () => {

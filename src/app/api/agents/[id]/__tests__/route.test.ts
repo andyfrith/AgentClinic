@@ -27,7 +27,9 @@ vi.mock("@/db", () => ({
 
 vi.mock("drizzle-orm", () => ({ eq: vi.fn(() => "eq-clause") }));
 
-beforeEach(() => { vi.restoreAllMocks(); });
+beforeEach(() => {
+  vi.restoreAllMocks();
+});
 
 describe("GET /api/agents/[id]", () => {
   it("returns an agent by id", async () => {

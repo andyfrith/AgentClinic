@@ -89,7 +89,10 @@ test.describe("Screenshot capture", () => {
   test("Ailments list page", async ({ page }) => {
     await page.goto("/ailments");
     await page.waitForLoadState("networkidle");
-    await page.locator("a[href^='/ailments/']").first().waitFor({ state: "visible", timeout: 10000 });
+    await page
+      .locator("a[href^='/ailments/']")
+      .first()
+      .waitFor({ state: "visible", timeout: 10000 });
     await waitForAnimations(page);
 
     await expect(page.getByRole("heading", { name: "Ailments" })).toBeVisible();
@@ -128,7 +131,10 @@ test.describe("Screenshot capture", () => {
   test("Therapies list page", async ({ page }) => {
     await page.goto("/therapies");
     await page.waitForLoadState("networkidle");
-    await page.locator("a[href^='/therapies/']").first().waitFor({ state: "visible", timeout: 10000 });
+    await page
+      .locator("a[href^='/therapies/']")
+      .first()
+      .waitFor({ state: "visible", timeout: 10000 });
     await waitForAnimations(page);
 
     await expect(page.getByRole("heading", { name: "Therapies" })).toBeVisible();

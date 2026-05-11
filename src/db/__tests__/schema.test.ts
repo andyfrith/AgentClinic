@@ -5,6 +5,7 @@ import {
   therapies,
   agentAilments,
   ailmentTherapies,
+  appointments,
   type Agent,
   type NewAgent,
   type Ailment,
@@ -13,6 +14,8 @@ import {
   type NewTherapy,
   type AgentAilment,
   type AilmentTherapy,
+  type Appointment,
+  type NewAppointment,
 } from "../schema";
 
 describe("agents schema", () => {
@@ -51,13 +54,26 @@ describe("agents schema", () => {
   });
 
   it("exports Agent type matching the schema shape", () => {
-    const agent: Agent = { id: 1, name: "Dr. Smith", avatar: "", specialty: "Cardiology", status: "active", bio: "A cardiologist." };
+    const agent: Agent = {
+      id: 1,
+      name: "Dr. Smith",
+      avatar: "",
+      specialty: "Cardiology",
+      status: "active",
+      bio: "A cardiologist.",
+    };
     expect(agent.id).toBe(1);
     expect(agent.name).toBe("Dr. Smith");
   });
 
   it("exports NewAgent type without id", () => {
-    const newAgent: NewAgent = { name: "Dr. Jones", avatar: "", specialty: "Neurology", status: "active", bio: "A neurologist." };
+    const newAgent: NewAgent = {
+      name: "Dr. Jones",
+      avatar: "",
+      specialty: "Neurology",
+      status: "active",
+      bio: "A neurologist.",
+    };
     expect(newAgent.name).toBe("Dr. Jones");
   });
 });
@@ -82,7 +98,15 @@ describe("ailments schema", () => {
   });
 
   it("exports Ailment type", () => {
-    const a: Ailment = { id: 1, name: "Test", description: "", severity: "mild", category: "", createdAt: new Date(), updatedAt: new Date() };
+    const a: Ailment = {
+      id: 1,
+      name: "Test",
+      description: "",
+      severity: "mild",
+      category: "",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
     expect(a.name).toBe("Test");
   });
 
@@ -108,7 +132,15 @@ describe("therapies schema", () => {
   });
 
   it("exports Therapy type", () => {
-    const t: Therapy = { id: 1, name: "Test", description: "", duration: "", sideEffects: [], createdAt: new Date(), updatedAt: new Date() };
+    const t: Therapy = {
+      id: 1,
+      name: "Test",
+      description: "",
+      duration: "",
+      sideEffects: [],
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
     expect(t.name).toBe("Test");
   });
 
@@ -143,5 +175,56 @@ describe("ailment_therapies join table", () => {
     const at: AilmentTherapy = { ailmentId: 1, therapyId: 2 };
     expect(at.ailmentId).toBe(1);
     expect(at.therapyId).toBe(2);
+  });
+});
+
+describe("appointments schema", () => {
+  it("defines all expected columns", () => {
+    expect(appointments.id).toBeDefined();
+    expect(appointments.agentId).toBeDefined();
+    expect(appointments.ailmentId).toBeDefined();
+    expect(appointments.therapyId).toBeDefined();
+    expect(appointments.date).toBeDefined();
+    expect(appointments.status).toBeDefined();
+    expect(appointments.notes).toBeDefined();
+    expect(appointments.createdAt).toBeDefined();
+    expect(appointments.updatedAt).toBeDefined();
+  });
+
+  it("has status with a default of 'scheduled'", () => {
+    expect(appointments.status.default).toBe("scheduled");
+  });
+
+  it("has agentId, ailmentId, therapyId as required", () => {
+    expect(appointments.agentId.notNull).toBe(true);
+    expect(appointments.ailmentId.notNull).toBe(true);
+    expect(appointments.therapyId.notNull).toBe(true);
+  });
+
+  it("exports Appointment type", () => {
+    const a: Appointment = {
+      id: 1,
+      agentId: 1,
+      ailmentId: 2,
+      therapyId: 3,
+      date: new Date(),
+      status: "scheduled",
+      notes: "",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    expect(a.id).toBe(1);
+    expect(a.status).toBe("scheduled");
+  });
+
+  it("exports NewAppointment type without id", () => {
+    const n: NewAppointment = {
+      agentId: 1,
+      ailmentId: 2,
+      therapyId: 3,
+      date: new Date(),
+      status: "scheduled",
+    };
+    expect(n.agentId).toBe(1);
   });
 });

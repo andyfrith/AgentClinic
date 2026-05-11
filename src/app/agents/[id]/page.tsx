@@ -104,7 +104,10 @@ export default function AgentDetailPage() {
             <div className="flex flex-wrap gap-2">
               {agent.ailments.map((a) => (
                 <Link key={a.id} href={`/ailments/${a.id}`}>
-                  <Badge variant="secondary" className="hover:bg-secondary/80 transition-colors cursor-pointer">
+                  <Badge
+                    variant="secondary"
+                    className="hover:bg-secondary/80 transition-colors cursor-pointer"
+                  >
                     {a.name}
                   </Badge>
                 </Link>

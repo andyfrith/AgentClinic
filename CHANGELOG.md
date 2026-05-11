@@ -55,6 +55,40 @@ All notable changes to this project are documented below.
 - Add screenshots for Ailments list, Ailment detail, Therapies list, and Therapy detail pages
 - Update README.md preview table with all new page screenshots
 
+
+### Specs
+- Add Phase 3 feature spec for Appointment Booking (requirements, plan, validation)
+- Update README.md spec links to include Phase 3
+
+### Data Model
+- Add `appointments` table to Drizzle schema (agent_id, ailment_id, therapy_id, date, status enum, notes, timestamps)
+- Add appointment status enum (`scheduled`, `in-progress`, `completed`, `cancelled`)
+- Seed database with 5 sample appointments across all statuses
+
+### API
+- Add `GET /api/appointments` endpoint with joined agent/ailment/therapy data
+- Add `GET /api/appointments/[id]` endpoint with full details
+- Add `POST /api/appointments` endpoint with Zod validation and double-booking prevention
+- Add `PATCH /api/appointments/[id]` endpoint with status transition validation
+- Add `GET /api/appointments/availability` endpoint for time-slot availability checks
+
+### UI
+- Add Appointments list page (`/appointments`) with status badges and date-sorted cards
+- Add Appointment detail page (`/appointments/[id]`) with status workflow actions
+- Add New Appointment form (`/appointments/new`) with cascading selectors (agent → ailment → therapy) and date picker
+- Add `AppointmentStatusBadge` component with status-colored styling
+- Add "Appointments" link to dashboard header navigation
+- Handle loading, error, and empty states across all new pages
+- Confirm dialog before cancelling appointments
+
+### Tests
+- Add schema unit tests for appointments table
+- Add API route tests for appointments CRUD and validation
+- Add TanStack Query hook tests for appointments (list, detail, create, update)
+- Add `AppointmentStatusBadge` component tests
+- Add Playwright e2e tests for appointments list, detail, and booking form flows
+- All 104 unit tests passing, format clean, typecheck clean
+
 ## 2026-05-09
 
 ### Initial commit
