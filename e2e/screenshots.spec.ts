@@ -32,6 +32,11 @@ test.describe("Screenshot capture", () => {
     await page.goto("/");
     await page.waitForLoadState("networkidle");
     await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "AgentClinic" })).toBeVisible();
+    const h1 = page.getByRole("heading", { name: "AgentClinic" });
+    await expect(h1).toHaveCSS("opacity", "1");
+
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "home.png"),
       fullPage: true,
@@ -43,6 +48,13 @@ test.describe("Screenshot capture", () => {
     await page.waitForLoadState("networkidle");
     await page.locator("a[href^='/agents/']").first().waitFor({ state: "visible", timeout: 10000 });
     await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { name: "Agents" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Agents" })).toHaveCSS("opacity", "1");
+    const agentLink = page.locator("a[href^='/agents/']").first();
+    await expect(agentLink).toBeVisible();
+    await expect(agentLink).toHaveCSS("opacity", "1");
+
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "agents.png"),
       fullPage: true,
@@ -55,10 +67,16 @@ test.describe("Screenshot capture", () => {
 
     const agentLink = page.locator("a[href^='/agents/']").first();
     await agentLink.waitFor({ state: "visible", timeout: 10000 });
+    const agentName = await agentLink.locator("[data-slot='card-title']").textContent();
     await agentLink.click();
     await page.waitForLoadState("networkidle");
-
     await waitForAnimations(page);
+
+    await expect(page.getByRole("heading", { level: 1, name: agentName!.trim() })).toBeVisible();
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCSS("opacity", "1");
+    await expect(page.getByText("Bio")).toBeVisible();
+    await expect(page.getByText("Status:")).toBeVisible();
+
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "agent-detail.png"),
       fullPage: true,
