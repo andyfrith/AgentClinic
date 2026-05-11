@@ -7,6 +7,13 @@ const paramsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+const updateSchema = z.object({
+  name: z.string().min(1).max(255).optional(),
+  description: z.string().optional(),
+  duration: z.string().max(100).optional(),
+  sideEffects: z.array(z.string()).optional(),
+});
+
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: rawId } = await params;
@@ -42,5 +49,72 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return Response.json({ ...therapy, ailments: linkedAilments });
   } catch {
     return Response.json({ error: "Failed to fetch therapy" }, { status: 500 });
+  }
+}
+
+export async function PATCH(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id: rawId } = await params;
+    const parsed = paramsSchema.safeParse({ id: rawId });
+
+    if (!parsed.success) {
+      return Response.json(
+        { error: "Invalid therapy ID", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { id } = parsed.data;
+
+    const [existing] = await db.select().from(therapies).where(eq(therapies.id, id)).limit(1);
+    if (!existing) {
+      return Response.json({ error: "Therapy not found" }, { status: 404 });
+    }
+
+    const body = await _request.json();
+    const bodyParsed = updateSchema.safeParse(body);
+
+    if (!bodyParsed.success) {
+      return Response.json(
+        { error: "Invalid input", details: bodyParsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const [updated] = await db
+      .update(therapies)
+      .set({ ...bodyParsed.data, updatedAt: new Date() })
+      .where(eq(therapies.id, id))
+      .returning();
+
+    return Response.json(updated);
+  } catch {
+    return Response.json({ error: "Failed to update therapy" }, { status: 500 });
+  }
+}
+
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id: rawId } = await params;
+    const parsed = paramsSchema.safeParse({ id: rawId });
+
+    if (!parsed.success) {
+      return Response.json(
+        { error: "Invalid therapy ID", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { id } = parsed.data;
+
+    const [existing] = await db.select().from(therapies).where(eq(therapies.id, id)).limit(1);
+    if (!existing) {
+      return Response.json({ error: "Therapy not found" }, { status: 404 });
+    }
+
+    await db.delete(therapies).where(eq(therapies.id, id));
+    return Response.json({ success: true });
+  } catch {
+    return Response.json({ error: "Failed to delete therapy" }, { status: 500 });
   }
 }

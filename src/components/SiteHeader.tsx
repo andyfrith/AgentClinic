@@ -2,16 +2,28 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useStaff } from "@/contexts/StaffContext";
 
 const navLinks = [
   { href: "/agents", label: "Agents" },
   { href: "/ailments", label: "Ailments" },
   { href: "/therapies", label: "Therapies" },
   { href: "/appointments", label: "Appointments" },
+  { href: "/staff", label: "Staff" },
 ];
 
 export function SiteHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const pathname = usePathname();
+  const { staff, hydrated } = useStaff();
+
+  const staffHref = hydrated && staff ? "/staff" : "/staff/login";
+
+  const links = navLinks.map((link) => ({
+    ...link,
+    href: link.href === "/staff" ? staffHref : link.href,
+  }));
 
   return (
     <header className="border-b">
@@ -38,11 +50,15 @@ export function SiteHeader() {
         </button>
 
         <div className="hidden sm:flex items-center gap-6">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className={`text-sm transition-colors ${
+                pathname.startsWith(link.href === "/staff" ? "/staff" : link.href)
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
             >
               {link.label}
             </Link>
@@ -52,11 +68,15 @@ export function SiteHeader() {
 
       {menuOpen && (
         <div className="sm:hidden border-t px-4 py-3 space-y-3">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="block text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className={`block text-sm transition-colors ${
+                pathname.startsWith(link.href === "/staff" ? "/staff" : link.href)
+                  ? "text-foreground font-medium"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
               onClick={() => setMenuOpen(false)}
             >
               {link.label}

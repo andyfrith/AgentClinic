@@ -112,6 +112,31 @@ export function useCreateAppointment() {
   });
 }
 
+async function assignStaff(appointmentId: number, staffId: number) {
+  const res = await fetch(`/api/appointments/${appointmentId}/assign`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ staffId }),
+  });
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error || "Failed to assign staff");
+  }
+  return res.json();
+}
+
+export function useAssignStaff() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ appointmentId, staffId }: { appointmentId: number; staffId: number }) =>
+      assignStaff(appointmentId, staffId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      queryClient.invalidateQueries({ queryKey: ["stats"] });
+    },
+  });
+}
+
 export function useUpdateAppointment() {
   const queryClient = useQueryClient();
   return useMutation({

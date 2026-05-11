@@ -8,6 +8,13 @@
       "when": 1778522065017,
       "tag": "0000_parched_joseph",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778524027445,
+      "tag": "0001_talented_sprite",
+      "breakpoints": true
     }
   ]
 }

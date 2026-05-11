@@ -7,6 +7,13 @@ const paramsSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
+const updateSchema = z.object({
+  name: z.string().min(1).max(255).optional(),
+  description: z.string().optional(),
+  severity: z.enum(["mild", "moderate", "severe"]).optional(),
+  category: z.string().max(100).optional(),
+});
+
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id: rawId } = await params;
@@ -57,5 +64,72 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
     return Response.json({ ...ailment, agents: linkedAgents, therapies: linkedTherapies });
   } catch {
     return Response.json({ error: "Failed to fetch ailment" }, { status: 500 });
+  }
+}
+
+export async function PATCH(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id: rawId } = await params;
+    const parsed = paramsSchema.safeParse({ id: rawId });
+
+    if (!parsed.success) {
+      return Response.json(
+        { error: "Invalid ailment ID", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { id } = parsed.data;
+
+    const [existing] = await db.select().from(ailments).where(eq(ailments.id, id)).limit(1);
+    if (!existing) {
+      return Response.json({ error: "Ailment not found" }, { status: 404 });
+    }
+
+    const body = await _request.json();
+    const bodyParsed = updateSchema.safeParse(body);
+
+    if (!bodyParsed.success) {
+      return Response.json(
+        { error: "Invalid input", details: bodyParsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const [updated] = await db
+      .update(ailments)
+      .set({ ...bodyParsed.data, updatedAt: new Date() })
+      .where(eq(ailments.id, id))
+      .returning();
+
+    return Response.json(updated);
+  } catch {
+    return Response.json({ error: "Failed to update ailment" }, { status: 500 });
+  }
+}
+
+export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+  try {
+    const { id: rawId } = await params;
+    const parsed = paramsSchema.safeParse({ id: rawId });
+
+    if (!parsed.success) {
+      return Response.json(
+        { error: "Invalid ailment ID", details: parsed.error.flatten() },
+        { status: 400 }
+      );
+    }
+
+    const { id } = parsed.data;
+
+    const [existing] = await db.select().from(ailments).where(eq(ailments.id, id)).limit(1);
+    if (!existing) {
+      return Response.json({ error: "Ailment not found" }, { status: 404 });
+    }
+
+    await db.delete(ailments).where(eq(ailments.id, id));
+    return Response.json({ success: true });
+  } catch {
+    return Response.json({ error: "Failed to delete ailment" }, { status: 500 });
   }
 }

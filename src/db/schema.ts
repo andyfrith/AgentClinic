@@ -106,3 +106,33 @@ export const appointments = pgTable("appointments", {
 
 export type Appointment = typeof appointments.$inferSelect;
 export type NewAppointment = typeof appointments.$inferInsert;
+
+export const staffRoleEnum = pgEnum("staff_role", ["admin", "editor", "viewer"]);
+
+export const staff = pgTable("staff", {
+  id: serial("id").primaryKey(),
+  name: varchar("name", { length: 255 }).notNull(),
+  role: staffRoleEnum("role").notNull().default("viewer"),
+  avatar: varchar("avatar", { length: 255 }).notNull().default(""),
+  specialties: text("specialties").array().notNull().default([]),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const appointmentStaff = pgTable(
+  "appointment_staff",
+  {
+    appointmentId: integer("appointment_id")
+      .notNull()
+      .references(() => appointments.id, { onDelete: "cascade" }),
+    staffId: integer("staff_id")
+      .notNull()
+      .references(() => staff.id, { onDelete: "cascade" }),
+  },
+  (t) => [unique().on(t.appointmentId, t.staffId)]
+);
+
+export type Staff = typeof staff.$inferSelect;
+export type NewStaff = typeof staff.$inferInsert;
+export type AppointmentStaff = typeof appointmentStaff.$inferSelect;
+export type NewAppointmentStaff = typeof appointmentStaff.$inferInsert;
