@@ -86,7 +86,7 @@ if [ -f CHANGELOG.md ]; then
   else
     echo "  ⚠  No entry for today ($today) in CHANGELOG.md"
     echo "  ℹ  Run: scripts/update-changelog.sh -"
-    pass "CHANGELOG.md exists (no today entry — add one before merging)"
+    fail "Changelog missing entry for today — add one before merging"
   fi
 else
   fail "CHANGELOG.md is missing — run scripts/update-changelog.sh"
