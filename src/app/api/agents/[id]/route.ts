@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { agents } from "@/db/schema";
+import { agents, ailments, agentAilments } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 
@@ -27,7 +27,20 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
       return Response.json({ error: "Agent not found" }, { status: 404 });
     }
 
-    return Response.json(agent);
+    const agentAilmentsList = await db
+      .select({
+        id: ailments.id,
+        name: ailments.name,
+        severity: ailments.severity,
+        category: ailments.category,
+        diagnosedAt: agentAilments.diagnosedAt,
+        notes: agentAilments.notes,
+      })
+      .from(agentAilments)
+      .innerJoin(ailments, eq(agentAilments.ailmentId, ailments.id))
+      .where(eq(agentAilments.agentId, id));
+
+    return Response.json({ ...agent, ailments: agentAilmentsList });
   } catch {
     return Response.json({ error: "Failed to fetch agent" }, { status: 500 });
   }

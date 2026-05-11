@@ -98,6 +98,21 @@ export default function AgentDetailPage() {
           <p className="text-muted-foreground leading-relaxed">{agent.bio}</p>
         </div>
 
+        {agent.ailments.length > 0 && (
+          <div className="mt-8 rounded-lg border p-6">
+            <h2 className="text-lg font-semibold mb-3">Diagnoses</h2>
+            <div className="flex flex-wrap gap-2">
+              {agent.ailments.map((a) => (
+                <Link key={a.id} href={`/ailments/${a.id}`}>
+                  <Badge variant="secondary" className="hover:bg-secondary/80 transition-colors cursor-pointer">
+                    {a.name}
+                  </Badge>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mt-6 flex items-center gap-2 text-sm text-muted-foreground">
           <span>Status:</span>
           <span className="capitalize font-medium text-foreground">{agent.status}</span>

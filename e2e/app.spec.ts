@@ -20,6 +20,15 @@ test.describe("AgentClinic E2E", () => {
 
     await page.getByRole("link", { name: "AgentClinic" }).first().click();
     await expect(page).toHaveURL("/");
+
+    await page.getByRole("link", { name: "Ailments", exact: true }).click();
+    await expect(page).toHaveURL("/ailments");
+
+    await page.getByRole("link", { name: "AgentClinic" }).first().click();
+    await expect(page).toHaveURL("/");
+
+    await page.getByRole("link", { name: "Therapies", exact: true }).click();
+    await expect(page).toHaveURL("/therapies");
   });
 
   test("agents page loads and displays agent cards", async ({ page }) => {
@@ -112,6 +121,30 @@ test.describe("Responsive Design", () => {
       await agentLink.waitFor({ state: "visible", timeout: 10000 });
       await agentLink.click();
       await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      const overflowW = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+      );
+      expect(overflowW).toBe(false);
+    });
+
+    test(`ailments page renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto("/ailments");
+      await page.waitForSelector("a[href^='/ailments/']", { timeout: 10000 });
+      const overflowW = await page.evaluate(
+        () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+      );
+      expect(overflowW).toBe(false);
+    });
+
+    test(`therapies page renders without horizontal overflow at ${vp.name} (${vp.width}px)`, async ({
+      page,
+    }) => {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto("/therapies");
+      await page.waitForSelector("a[href^='/therapies/']", { timeout: 10000 });
       const overflowW = await page.evaluate(
         () => document.documentElement.scrollWidth > document.documentElement.clientWidth
       );

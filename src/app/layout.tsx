@@ -42,6 +42,18 @@ export default function RootLayout({
               >
                 Agents
               </Link>
+              <Link
+                href="/ailments"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Ailments
+              </Link>
+              <Link
+                href="/therapies"
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Therapies
+              </Link>
             </nav>
           </header>
           <main className="flex-1">{children}</main>

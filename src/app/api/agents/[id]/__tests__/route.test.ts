@@ -10,33 +10,24 @@ const mockAgent = {
   bio: "A cardiologist.",
 };
 
-type QueryBuilder = {
-  from: (table: unknown) => {
-    where: (condition: unknown) => { limit: (n: number) => Promise<unknown[]> };
-  };
-};
-
 vi.mock("@/db", () => ({
   db: {
-    select: vi.fn(
-      (): QueryBuilder => ({
-        from: vi.fn(() => ({
-          where: vi.fn(() => ({
-            limit: vi.fn(() => Promise.resolve([mockAgent])),
-          })),
+    select: vi.fn(() => ({
+      from: vi.fn(() => ({
+        where: vi.fn(() => ({
+          limit: vi.fn(() => Promise.resolve([mockAgent])),
         })),
-      })
-    ),
+        innerJoin: vi.fn(() => ({
+          where: vi.fn(() => Promise.resolve([])),
+        })),
+      })),
+    })),
   },
 }));
 
-vi.mock("drizzle-orm", () => ({
-  eq: vi.fn(() => "eq-clause"),
-}));
+vi.mock("drizzle-orm", () => ({ eq: vi.fn(() => "eq-clause") }));
 
-beforeEach(() => {
-  vi.restoreAllMocks();
-});
+beforeEach(() => { vi.restoreAllMocks(); });
 
 describe("GET /api/agents/[id]", () => {
   it("returns an agent by id", async () => {
@@ -45,7 +36,9 @@ describe("GET /api/agents/[id]", () => {
     });
     expect(response.status).toBe(200);
     const body = await response.json();
-    expect(body).toEqual(mockAgent);
+    expect(body.id).toBe(1);
+    expect(body.name).toBe("Dr. Smith");
+    expect(body.ailments).toEqual([]);
   });
 
   it("returns 400 for invalid id", async () => {
