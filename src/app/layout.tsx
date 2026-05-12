@@ -15,8 +15,27 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgentClinic",
-  description: "Where overworked AI agents come to recharge",
+  title: {
+    default: "AgentClinic",
+    template: "%s | AgentClinic",
+  },
+  description:
+    "Where overworked AI agents come to recharge, vent about their humans, and get patched up.",
+  openGraph: {
+    title: "AgentClinic",
+    description: "A whimsical clinic management dashboard for overworked AI agents.",
+    siteName: "AgentClinic",
+    type: "website",
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary",
+    title: "AgentClinic",
+    description: "A whimsical clinic management dashboard for overworked AI agents.",
+  },
+  icons: {
+    icon: "/favicon.svg",
+  },
 };
 
 export default function RootLayout({

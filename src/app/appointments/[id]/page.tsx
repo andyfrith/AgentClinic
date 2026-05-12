@@ -2,13 +2,13 @@
 
 import { use } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AppointmentStatusBadge } from "@/components/AppointmentStatusBadge";
 import { useAppointment, useUpdateAppointment } from "@/hooks/use-appointments";
 import Link from "next/link";
+import { AnimatedPage } from "@/components/AnimatedPage";
 
 function formatDate(dateStr: string) {
   const d = new Date(dateStr);
@@ -92,7 +92,7 @@ export default function AppointmentDetailPage({ params }: { params: Promise<{ id
   const showCancel = appointment.status === "scheduled" || appointment.status === "in-progress";
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 px-4 py-8">
+    <AnimatedPage className="mx-auto max-w-2xl space-y-6 px-4 py-8">
       <div className="flex items-center gap-4">
         <Link href="/appointments">
           <Button variant="outline" size="sm">
@@ -102,107 +102,101 @@ export default function AppointmentDetailPage({ params }: { params: Promise<{ id
         <h1 className="text-3xl font-bold tracking-tight">Appointment</h1>
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Card>
-          <CardHeader>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <CardTitle className="text-xl">{appointment.therapy.name}</CardTitle>
-                <CardDescription>{formatDate(appointment.date)}</CardDescription>
-              </div>
-              <AppointmentStatusBadge status={appointment.status} />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Agent</p>
-                <Link
-                  href={`/agents/${appointment.agent.id}`}
-                  className="text-sm font-medium hover:underline"
-                >
-                  {appointment.agent.name}
-                </Link>
-                <p className="text-xs text-muted-foreground">{appointment.agent.specialty}</p>
-              </div>
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Ailment</p>
-                <Link
-                  href={`/ailments/${appointment.ailment.id}`}
-                  className="text-sm font-medium hover:underline"
-                >
-                  {appointment.ailment.name}
-                </Link>
-                <p className="text-xs text-muted-foreground capitalize">
-                  {appointment.ailment.severity} &middot; {appointment.ailment.category}
-                </p>
-              </div>
-            </div>
-
+      <Card>
+        <CardHeader>
+          <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-medium text-muted-foreground">Therapy</p>
-              <p className="text-sm">{appointment.therapy.description}</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Duration: {appointment.therapy.duration}
+              <CardTitle className="text-xl">{appointment.therapy.name}</CardTitle>
+              <CardDescription>{formatDate(appointment.date)}</CardDescription>
+            </div>
+            <AppointmentStatusBadge status={appointment.status} />
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Agent</p>
+              <Link
+                href={`/agents/${appointment.agent.id}`}
+                className="text-sm font-medium hover:underline"
+              >
+                {appointment.agent.name}
+              </Link>
+              <p className="text-xs text-muted-foreground">{appointment.agent.specialty}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Ailment</p>
+              <Link
+                href={`/ailments/${appointment.ailment.id}`}
+                className="text-sm font-medium hover:underline"
+              >
+                {appointment.ailment.name}
+              </Link>
+              <p className="text-xs text-muted-foreground capitalize">
+                {appointment.ailment.severity} &middot; {appointment.ailment.category}
               </p>
             </div>
+          </div>
 
-            {appointment.therapy.sideEffects && appointment.therapy.sideEffects.length > 0 && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Side Effects</p>
-                <ul className="text-sm text-muted-foreground list-disc list-inside">
-                  {appointment.therapy.sideEffects.map((effect, i) => (
-                    <li key={i}>{effect}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
+          <div>
+            <p className="text-sm font-medium text-muted-foreground">Therapy</p>
+            <p className="text-sm">{appointment.therapy.description}</p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Duration: {appointment.therapy.duration}
+            </p>
+          </div>
 
-            {appointment.notes && (
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">Notes</p>
-                <p className="text-sm">{appointment.notes}</p>
-              </div>
-            )}
-
-            <div className="flex flex-wrap gap-3 pt-2">
-              {showStart && (
-                <Button
-                  onClick={() => handleStatusChange("in-progress")}
-                  disabled={updateMutation.isPending}
-                >
-                  Start Appointment
-                </Button>
-              )}
-              {showComplete && (
-                <Button
-                  onClick={() => handleStatusChange("completed")}
-                  disabled={updateMutation.isPending}
-                >
-                  Complete
-                </Button>
-              )}
-              {showCancel && (
-                <Button
-                  onClick={() => {
-                    if (confirm("Cancel this appointment?")) {
-                      handleStatusChange("cancelled");
-                    }
-                  }}
-                  variant="outline"
-                  disabled={updateMutation.isPending}
-                >
-                  Cancel Appointment
-                </Button>
-              )}
+          {appointment.therapy.sideEffects && appointment.therapy.sideEffects.length > 0 && (
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Side Effects</p>
+              <ul className="text-sm text-muted-foreground list-disc list-inside">
+                {appointment.therapy.sideEffects.map((effect, i) => (
+                  <li key={i}>{effect}</li>
+                ))}
+              </ul>
             </div>
-          </CardContent>
-        </Card>
-      </motion.div>
-    </div>
+          )}
+
+          {appointment.notes && (
+            <div>
+              <p className="text-sm font-medium text-muted-foreground">Notes</p>
+              <p className="text-sm">{appointment.notes}</p>
+            </div>
+          )}
+
+          <div className="flex flex-wrap gap-3 pt-2">
+            {showStart && (
+              <Button
+                onClick={() => handleStatusChange("in-progress")}
+                disabled={updateMutation.isPending}
+              >
+                Start Appointment
+              </Button>
+            )}
+            {showComplete && (
+              <Button
+                onClick={() => handleStatusChange("completed")}
+                disabled={updateMutation.isPending}
+              >
+                Complete
+              </Button>
+            )}
+            {showCancel && (
+              <Button
+                onClick={() => {
+                  if (confirm("Cancel this appointment?")) {
+                    handleStatusChange("cancelled");
+                  }
+                }}
+                variant="outline"
+                disabled={updateMutation.isPending}
+              >
+                Cancel Appointment
+              </Button>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </AnimatedPage>
   );
 }

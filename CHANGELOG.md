@@ -14,6 +14,31 @@ All notable changes to this project are documented below.
 - Fix seed script sequence drift: add `ALTER SEQUENCE ... RESTART WITH 1` after `DELETE` in seed to ensure deterministic staff IDs matching test expectations
 
 
+
+### Specs
+- Add Phase 6 feature spec for Polish & Deploy (requirements, plan, validation)
+- Update README.md spec links to include Phase 6
+
+### Infrastructure
+- Add route-level loading.tsx, error.tsx, not-found.tsx files for every route segment (35 files)
+- Create `AnimatedPage` reusable component wrapping pages with fade+slide-up entrance animation
+- Create `StaggerList` and `StaggerItem` reusable stagger animation components for list pages
+- Refactor all 14 existing pages from inline motion.div to use AnimatedPage/StaggerList
+- Add sitemap.ts and robots.ts for SEO
+- Replace default Next.js SVGs with custom SVG favicon
+- Add docker-compose.prod.yml with healthcheck support
+- Add .env.example documenting required environment variables
+
+### UI
+- Replace inline motion.div boilerplate on all pages with consistent AnimatedPage wrapper
+- Add stagger entrance animations to agent, ailment, therapy, and appointment list pages
+- Expand root layout metadata with Open Graph, Twitter card, and title template
+
+### Tests
+- Add E2E smoke test (e2e/smoke.spec.ts) covering all pages, navigation, console errors, and responsive overflow
+- Recapture all 12 page screenshots with updated animations
+- All 157 unit tests passing, typecheck clean, lint clean, format clean
+
 ## 2026-05-11
 
 ### Specs
