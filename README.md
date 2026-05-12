@@ -44,6 +44,7 @@ npm run dev                # http://localhost:3000
 - [Appointment Booking](specs/2026-05-11-appointment-booking/)
 - [Staff Views](specs/2026-05-11-staff-views/)
 - [Dashboard Enhancements](specs/2026-05-11-dashboard-enhancements/)
+- [Polish & Deploy](specs/2026-05-12-polish-deploy/)
 
 ## Skills
 
@@ -90,3 +91,48 @@ npm run dev                # http://localhost:3000
 
 > Screenshots were captured via Playwright at 1280×800 viewport (desktop).  
 > To regenerate, run `npx playwright test e2e/screenshots.spec.ts`.
+
+## Deployment
+
+### Production database
+
+Use the production Docker Compose file to start PostgreSQL:
+
+```bash
+docker compose -f docker-compose.prod.yml up -d
+```
+
+Set a strong database password in your environment:
+
+```bash
+export DB_PASSWORD=<strong-password>
+```
+
+### Build
+
+```bash
+npm run build
+npm start
+```
+
+### Environment variables
+
+Copy `.env.example` to `.env` and configure:
+
+```bash
+cp .env.example .env
+```
+
+Required variables:
+
+| Variable | Description |
+|---|---|
+| `DATABASE_URL` | PostgreSQL connection string |
+
+### Smoke test
+
+Run the E2E smoke test to verify all pages render correctly:
+
+```bash
+npx playwright test e2e/smoke.spec.ts
+```
