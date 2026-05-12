@@ -13,6 +13,7 @@ export type OverviewStats = {
     notes: string | null;
     agentName: string;
     therapyName: string;
+    assignedStaffId: number | null;
   }>;
   statusBreakdown: Array<{
     status: string;

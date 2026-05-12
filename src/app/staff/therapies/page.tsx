@@ -64,19 +64,23 @@ export default function StaffTherapiesPage() {
   };
 
   const handleSave = async () => {
-    const data = {
-      ...form,
-      sideEffects: form.sideEffects
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean),
-    };
-    if (editingId) {
-      await updateTherapy.mutateAsync({ id: editingId, ...data });
-    } else {
-      await createTherapy.mutateAsync(data);
+    try {
+      const data = {
+        ...form,
+        sideEffects: form.sideEffects
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      };
+      if (editingId) {
+        await updateTherapy.mutateAsync({ id: editingId, ...data });
+      } else {
+        await createTherapy.mutateAsync(data);
+      }
+      setDialogOpen(false);
+    } catch {
+      // Toast is handled by onError in the mutation hook
     }
-    setDialogOpen(false);
   };
 
   const handleDelete = async (id: number) => {
@@ -154,24 +158,33 @@ export default function StaffTherapiesPage() {
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div>
-                <label className="text-sm font-medium">Name</label>
+                <label htmlFor="therapy-name" className="text-sm font-medium">
+                  Name
+                </label>
                 <input
+                  id="therapy-name"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Duration</label>
+                <label htmlFor="therapy-duration" className="text-sm font-medium">
+                  Duration
+                </label>
                 <input
+                  id="therapy-duration"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.duration}
                   onChange={(e) => setForm({ ...form, duration: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Side Effects</label>
+                <label htmlFor="therapy-side-effects" className="text-sm font-medium">
+                  Side Effects
+                </label>
                 <input
+                  id="therapy-side-effects"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.sideEffects}
                   onChange={(e) => setForm({ ...form, sideEffects: e.target.value })}
@@ -179,8 +192,11 @@ export default function StaffTherapiesPage() {
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Description</label>
+                <label htmlFor="therapy-description" className="text-sm font-medium">
+                  Description
+                </label>
                 <textarea
+                  id="therapy-description"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm min-h-[80px]"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}

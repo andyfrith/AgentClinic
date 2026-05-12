@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { agents, ailments, therapies, appointments, staff } from "@/db/schema";
+import { agents, ailments, therapies, appointments, staff, appointmentStaff } from "@/db/schema";
 import { eq, sql, and, gte, lt } from "drizzle-orm";
 
 export async function GET() {
@@ -23,10 +23,12 @@ export async function GET() {
         notes: appointments.notes,
         agentName: agents.name,
         therapyName: therapies.name,
+        assignedStaffId: appointmentStaff.staffId,
       })
       .from(appointments)
       .innerJoin(agents, eq(appointments.agentId, agents.id))
       .innerJoin(therapies, eq(appointments.therapyId, therapies.id))
+      .leftJoin(appointmentStaff, eq(appointments.id, appointmentStaff.appointmentId))
       .where(and(gte(appointments.date, startOfDay), lt(appointments.date, startOfTomorrow)))
       .orderBy(appointments.date);
 

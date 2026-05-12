@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { ailments, agents, agentAilments, therapies, ailmentTherapies } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
+import { requireRole } from "@/app/api/_helpers/staff-auth";
 
 const paramsSchema = z.object({
   id: z.coerce.number().int().positive(),
@@ -67,7 +68,10 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
   }
 }
 
-export async function PATCH(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(request, ["editor", "admin"]);
+  if (auth) return auth;
+
   try {
     const { id: rawId } = await params;
     const parsed = paramsSchema.safeParse({ id: rawId });
@@ -86,7 +90,7 @@ export async function PATCH(_request: Request, { params }: { params: Promise<{ i
       return Response.json({ error: "Ailment not found" }, { status: 404 });
     }
 
-    const body = await _request.json();
+    const body = await request.json();
     const bodyParsed = updateSchema.safeParse(body);
 
     if (!bodyParsed.success) {
@@ -108,7 +112,10 @@ export async function PATCH(_request: Request, { params }: { params: Promise<{ i
   }
 }
 
-export async function DELETE(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(request, ["editor", "admin"]);
+  if (auth) return auth;
+
   try {
     const { id: rawId } = await params;
     const parsed = paramsSchema.safeParse({ id: rawId });

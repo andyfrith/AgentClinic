@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import type { Staff } from "@/db/schema";
 
 type StaffDetail = Staff & {
@@ -21,6 +22,23 @@ type CreateStaffInput = {
 
 type UpdateStaffInput = Partial<CreateStaffInput>;
 
+function getStaffId(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = localStorage.getItem("staff");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return String(parsed.id);
+    }
+  } catch {}
+  return null;
+}
+
+function authHeaders(): Record<string, string> {
+  const id = getStaffId();
+  return id ? { "x-staff-id": id } : {};
+}
+
 async function fetchStaff(): Promise<Staff[]> {
   const res = await fetch("/api/staff");
   if (!res.ok) throw new Error("Failed to fetch staff");
@@ -36,7 +54,7 @@ async function fetchStaffMember(id: string): Promise<StaffDetail> {
 async function createStaff(data: CreateStaffInput) {
   const res = await fetch("/api/staff", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -49,7 +67,7 @@ async function createStaff(data: CreateStaffInput) {
 async function updateStaff(id: number, data: UpdateStaffInput) {
   const res = await fetch(`/api/staff/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -60,7 +78,10 @@ async function updateStaff(id: number, data: UpdateStaffInput) {
 }
 
 async function deleteStaff(id: number) {
-  const res = await fetch(`/api/staff/${id}`, { method: "DELETE" });
+  const res = await fetch(`/api/staff/${id}`, {
+    method: "DELETE",
+    headers: authHeaders(),
+  });
   if (!res.ok) {
     const err = await res.json();
     throw new Error(err.error || "Failed to delete staff");
@@ -88,6 +109,10 @@ export function useCreateStaff() {
     mutationFn: createStaff,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
+      toast.success("Staff created");
+    },
+    onError: (err) => {
+      toast.error(err instanceof Error ? err.message : "Failed to create staff");
     },
   });
 }
@@ -98,6 +123,10 @@ export function useUpdateStaff() {
     mutationFn: ({ id, ...data }: { id: number } & UpdateStaffInput) => updateStaff(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
+      toast.success("Staff updated");
+    },
+    onError: (err) => {
+      toast.error(err instanceof Error ? err.message : "Failed to update staff");
     },
   });
 }
@@ -108,6 +137,10 @@ export function useDeleteStaff() {
     mutationFn: deleteStaff,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["staff"] });
+      toast.success("Staff deleted");
+    },
+    onError: (err) => {
+      toast.error(err instanceof Error ? err.message : "Failed to delete staff");
     },
   });
 }

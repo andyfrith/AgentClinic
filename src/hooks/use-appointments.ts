@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 type AgentInfo = {
   id: number;
@@ -50,6 +51,23 @@ type UpdateAppointmentInput = {
   date?: string;
 };
 
+function getStaffId(): string | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const stored = localStorage.getItem("staff");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return String(parsed.id);
+    }
+  } catch {}
+  return null;
+}
+
+function authHeaders(): Record<string, string> {
+  const id = getStaffId();
+  return id ? { "x-staff-id": id } : {};
+}
+
 async function fetchAppointments(): Promise<Appointment[]> {
   const res = await fetch("/api/appointments");
   if (!res.ok) throw new Error("Failed to fetch appointments");
@@ -65,7 +83,7 @@ async function fetchAppointment(id: string): Promise<Appointment> {
 async function createAppointment(data: CreateAppointmentInput) {
   const res = await fetch("/api/appointments", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -78,7 +96,7 @@ async function createAppointment(data: CreateAppointmentInput) {
 async function updateAppointment(id: number, data: UpdateAppointmentInput) {
   const res = await fetch(`/api/appointments/${id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify(data),
   });
   if (!res.ok) {
@@ -108,6 +126,10 @@ export function useCreateAppointment() {
     mutationFn: createAppointment,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["appointments"] });
+      toast.success("Appointment created");
+    },
+    onError: (err) => {
+      toast.error(err instanceof Error ? err.message : "Failed to create appointment");
     },
   });
 }
@@ -115,7 +137,7 @@ export function useCreateAppointment() {
 async function assignStaff(appointmentId: number, staffId: number) {
   const res = await fetch(`/api/appointments/${appointmentId}/assign`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...authHeaders() },
     body: JSON.stringify({ staffId }),
   });
   if (!res.ok) {

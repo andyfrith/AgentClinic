@@ -65,12 +65,16 @@ export default function StaffAilmentsPage() {
   };
 
   const handleSave = async () => {
-    if (editingId) {
-      await updateAilment.mutateAsync({ id: editingId, ...form });
-    } else {
-      await createAilment.mutateAsync(form);
+    try {
+      if (editingId) {
+        await updateAilment.mutateAsync({ id: editingId, ...form });
+      } else {
+        await createAilment.mutateAsync(form);
+      }
+      setDialogOpen(false);
+    } catch {
+      // Toast is handled by onError in the mutation hook
     }
-    setDialogOpen(false);
   };
 
   const handleDelete = async (id: number) => {
@@ -151,24 +155,33 @@ export default function StaffAilmentsPage() {
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div>
-                <label className="text-sm font-medium">Name</label>
+                <label htmlFor="ailment-name" className="text-sm font-medium">
+                  Name
+                </label>
                 <input
+                  id="ailment-name"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Category</label>
+                <label htmlFor="ailment-category" className="text-sm font-medium">
+                  Category
+                </label>
                 <input
+                  id="ailment-category"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Severity</label>
+                <label htmlFor="ailment-severity" className="text-sm font-medium">
+                  Severity
+                </label>
                 <select
+                  id="ailment-severity"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.severity}
                   onChange={(e) =>
@@ -181,8 +194,11 @@ export default function StaffAilmentsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-sm font-medium">Description</label>
+                <label htmlFor="ailment-description" className="text-sm font-medium">
+                  Description
+                </label>
                 <textarea
+                  id="ailment-description"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm min-h-[80px]"
                   value={form.description}
                   onChange={(e) => setForm({ ...form, description: e.target.value })}

@@ -1,6 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { GET, PATCH } from "../route";
 
+vi.mock("@/app/api/_helpers/staff-auth", () => ({
+  requireRole: vi.fn(() => Promise.resolve(null)),
+  getStaffMember: vi.fn(() =>
+    Promise.resolve({ id: 1, name: "Admin", role: "admin", avatar: "AD", specialties: [] })
+  ),
+}));
+
 type MockAppointment = {
   id: number;
   date: Date;

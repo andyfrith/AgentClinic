@@ -3,6 +3,17 @@
 All notable changes to this project are documented below.
 
 
+## 2026-05-12
+
+
+### Bug Fixes
+- Fix E2E test strict mode violation: use `getByRole("heading")` instead of `getByText("Dr. Ada's Dashboard")` to avoid Next.js route announcer collision
+- Fix "Assign staff" text check: seeded appointments already have staff assigned, so check for `role="combobox"` instead of placeholder text
+- Fix "Save" button assertion: create dialog shows "Create" (not "Save") for new entities
+- Fix form accessibility: add `id`/`htmlFor` pairs to input fields in agents, ailments, and therapies CRUD dialogs so Playwright `getByLabel()` works
+- Fix seed script sequence drift: add `ALTER SEQUENCE ... RESTART WITH 1` after `DELETE` in seed to ensure deterministic staff IDs matching test expectations
+
+
 ## 2026-05-11
 
 ### Specs
@@ -129,6 +140,32 @@ All notable changes to this project are documented below.
 ### Tests
 - Add 29 new unit tests: staff schema, staff API routes, staff hooks
 - All 133 unit tests passing, format clean, typecheck clean, lint clean
+
+
+### Specs
+- Add Phase 5 feature spec for Dashboard Enhancements (requirements, plan, validation)
+- Update README.md spec links to include Phase 5
+
+### Infrastructure
+- Install `sonner` for toast notifications
+- Add `<Toaster />` to root Providers wrapper
+
+### API
+- Create `src/app/api/_helpers/staff-auth.ts` with `getStaffMember` and `requireRole` utilities
+- Add API-level 403 enforcement on all mutation endpoints (agents, ailments, therapies, appointments, staff)
+- Staff CRUD gated to admin only; all other mutations gated to editor/admin
+- Add `assignedStaffId` to stats overview response for inline appointment controls
+
+### UI
+- Create `StaffAppointmentCard` component with inline staff assignment, status changes, reschedule, and cancel
+- Replace read-only appointment links on staff dashboard with interactive `StaffAppointmentCard`
+- Add success toasts on all CRUD operations (agents, ailments, therapies, appointments, staff)
+- Wire `x-staff-id` header from localStorage to all mutation fetch calls
+
+### Tests
+- Add 24 new unit tests: role enforcement (15), StaffAppointmentCard (13)
+- Add Playwright e2e tests for staff login, dashboard, CRUD, role-based UI, and responsive viewports
+- All 157 unit tests passing, format clean, typecheck clean, lint clean
 
 ## 2026-05-09
 
