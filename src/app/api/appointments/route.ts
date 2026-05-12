@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { appointments, agents, ailments, therapies } from "@/db/schema";
 import { eq, desc, and, sql } from "drizzle-orm";
 import { z } from "zod";
+import { requireRole } from "@/app/api/_helpers/staff-auth";
 
 const createSchema = z.object({
   agentId: z.number().int().positive(),
@@ -53,6 +54,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireRole(request, ["editor", "admin"]);
+  if (auth) return auth;
+
   try {
     const body = await request.json();
     const parsed = createSchema.safeParse(body);

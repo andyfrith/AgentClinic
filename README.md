@@ -43,6 +43,7 @@ npm run dev                # http://localhost:3000
 - [Ailments & Therapies](specs/2026-05-11-ailments-therapies/)
 - [Appointment Booking](specs/2026-05-11-appointment-booking/)
 - [Staff Views](specs/2026-05-11-staff-views/)
+- [Dashboard Enhancements](specs/2026-05-11-dashboard-enhancements/)
 
 ## Skills
 

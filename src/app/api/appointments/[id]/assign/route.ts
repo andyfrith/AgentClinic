@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { appointmentStaff } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
 import { z } from "zod";
+import { requireRole } from "@/app/api/_helpers/staff-auth";
 
 const paramsSchema = z.object({
   id: z.coerce.number().int().positive(),
@@ -11,7 +12,10 @@ const assignSchema = z.object({
   staffId: z.number().int().positive(),
 });
 
-export async function POST(_request: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const auth = await requireRole(request, ["editor", "admin"]);
+  if (auth) return auth;
+
   try {
     const { id: rawId } = await params;
     const parsed = paramsSchema.safeParse({ id: rawId });
@@ -24,7 +28,7 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
     }
 
     const { id } = parsed.data;
-    const body = await _request.json();
+    const body = await request.json();
     const bodyParsed = assignSchema.safeParse(body);
 
     if (!bodyParsed.success) {

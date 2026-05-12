@@ -58,12 +58,16 @@ export default function StaffAgentsPage() {
   };
 
   const handleSave = async () => {
-    if (editingId) {
-      await updateAgent.mutateAsync({ id: editingId, ...form });
-    } else {
-      await createAgent.mutateAsync(form);
+    try {
+      if (editingId) {
+        await updateAgent.mutateAsync({ id: editingId, ...form });
+      } else {
+        await createAgent.mutateAsync(form);
+      }
+      setDialogOpen(false);
+    } catch {
+      // Toast is handled by onError in the mutation hook
     }
-    setDialogOpen(false);
   };
 
   const handleDelete = async (id: number) => {
@@ -145,32 +149,44 @@ export default function StaffAgentsPage() {
             </DialogHeader>
             <div className="space-y-4 pt-4">
               <div>
-                <label className="text-sm font-medium">Name</label>
+                <label htmlFor="agent-name" className="text-sm font-medium">
+                  Name
+                </label>
                 <input
+                  id="agent-name"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.name}
                   onChange={(e) => setForm({ ...form, name: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Avatar (initials)</label>
+                <label htmlFor="agent-avatar" className="text-sm font-medium">
+                  Avatar (initials)
+                </label>
                 <input
+                  id="agent-avatar"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.avatar}
                   onChange={(e) => setForm({ ...form, avatar: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Specialty</label>
+                <label htmlFor="agent-specialty" className="text-sm font-medium">
+                  Specialty
+                </label>
                 <input
+                  id="agent-specialty"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.specialty}
                   onChange={(e) => setForm({ ...form, specialty: e.target.value })}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Status</label>
+                <label htmlFor="agent-status" className="text-sm font-medium">
+                  Status
+                </label>
                 <select
+                  id="agent-status"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
                   value={form.status}
                   onChange={(e) => setForm({ ...form, status: e.target.value })}
@@ -182,8 +198,11 @@ export default function StaffAgentsPage() {
                 </select>
               </div>
               <div>
-                <label className="text-sm font-medium">Bio</label>
+                <label htmlFor="agent-bio" className="text-sm font-medium">
+                  Bio
+                </label>
                 <textarea
+                  id="agent-bio"
                   className="w-full mt-1 px-3 py-2 rounded-md border text-sm min-h-[80px]"
                   value={form.bio}
                   onChange={(e) => setForm({ ...form, bio: e.target.value })}

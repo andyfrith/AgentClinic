@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { agents } from "@/db/schema";
 import { z } from "zod";
+import { requireRole } from "@/app/api/_helpers/staff-auth";
 
 const querySchema = z.object({
   status: z.string().optional(),
@@ -27,6 +28,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireRole(request, ["editor", "admin"]);
+  if (auth) return auth;
+
   try {
     const body = await request.json();
     const parsed = createSchema.safeParse(body);

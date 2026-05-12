@@ -1,6 +1,7 @@
 import { db } from "@/db";
 import { ailments } from "@/db/schema";
 import { z } from "zod";
+import { requireRole } from "@/app/api/_helpers/staff-auth";
 
 const createSchema = z.object({
   name: z.string().min(1).max(255),
@@ -19,6 +20,9 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  const auth = await requireRole(request, ["editor", "admin"]);
+  if (auth) return auth;
+
   try {
     const body = await request.json();
     const parsed = createSchema.safeParse(body);

@@ -235,7 +235,7 @@ const seedStaff = [
 ];
 
 async function seed() {
-  console.log("Seeding staff...");
+  console.log("Resetting database...");
   await db.delete(appointmentStaff);
   await db.delete(staff);
   await db.delete(appointments);
@@ -244,6 +244,11 @@ async function seed() {
   await db.delete(therapies);
   await db.delete(ailments);
   await db.delete(agents);
+  await client`ALTER SEQUENCE agents_id_seq RESTART WITH 1`;
+  await client`ALTER SEQUENCE ailments_id_seq RESTART WITH 1`;
+  await client`ALTER SEQUENCE therapies_id_seq RESTART WITH 1`;
+  await client`ALTER SEQUENCE appointments_id_seq RESTART WITH 1`;
+  await client`ALTER SEQUENCE staff_id_seq RESTART WITH 1`;
   const insertedAgents = await db.insert(agents).values(seedAgents).returning();
 
   console.log("Seeding ailments...");

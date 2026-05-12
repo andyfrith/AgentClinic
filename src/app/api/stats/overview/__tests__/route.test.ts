@@ -30,8 +30,10 @@ describe("GET /api/stats/overview", () => {
           from: vi.fn(() => ({
             innerJoin: vi.fn(() => ({
               innerJoin: vi.fn(() => ({
-                where: vi.fn(() => ({
-                  orderBy: vi.fn(() => Promise.resolve([])),
+                leftJoin: vi.fn(() => ({
+                  where: vi.fn(() => ({
+                    orderBy: vi.fn(() => Promise.resolve([])),
+                  })),
                 })),
               })),
             })),

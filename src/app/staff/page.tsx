@@ -3,16 +3,9 @@
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useOverviewStats } from "@/hooks/use-stats";
+import { useStaffList } from "@/hooks/use-staff";
 import { useStaff } from "@/contexts/StaffContext";
-
-import { Badge } from "@/components/ui/badge";
-
-const statusColors: Record<string, string> = {
-  scheduled: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-  "in-progress": "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-  completed: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-  cancelled: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-};
+import { StaffAppointmentCard } from "@/components/StaffAppointmentCard";
 
 const quickLinks = [
   { href: "/staff/agents", label: "Manage Agents", desc: "Add, edit, or remove agents" },
@@ -22,6 +15,7 @@ const quickLinks = [
 
 export default function StaffDashboardPage() {
   const { data: stats, isLoading, error } = useOverviewStats();
+  const { data: staffList } = useStaffList();
   const { staff, canEdit } = useStaff();
 
   if (isLoading) {
@@ -87,23 +81,16 @@ export default function StaffDashboardPage() {
             <h2 className="text-xl font-semibold mb-4">Today&apos;s Appointments</h2>
             <div className="space-y-3">
               {stats.todayAppointments.map((apt) => (
-                <Link
+                <StaffAppointmentCard
                   key={apt.id}
-                  href={`/appointments/${apt.id}`}
-                  className="flex items-center justify-between p-4 rounded-lg border hover:border-primary transition-colors"
-                >
-                  <div>
-                    <div className="font-medium">{apt.agentName}</div>
-                    <div className="text-sm text-muted-foreground">{apt.therapyName}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {new Date(apt.date).toLocaleTimeString([], {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </div>
-                  </div>
-                  <Badge className={statusColors[apt.status] || ""}>{apt.status}</Badge>
-                </Link>
+                  id={apt.id}
+                  agentName={apt.agentName}
+                  therapyName={apt.therapyName}
+                  date={apt.date}
+                  status={apt.status}
+                  assignedStaffId={apt.assignedStaffId ?? null}
+                  staffList={staffList ?? []}
+                />
               ))}
             </div>
           </div>

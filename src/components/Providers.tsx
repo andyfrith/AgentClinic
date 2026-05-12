@@ -2,6 +2,7 @@
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
+import { Toaster } from "sonner";
 import { StaffProvider } from "@/contexts/StaffContext";
 
 export function Providers({ children }: { children: ReactNode }) {
@@ -9,7 +10,10 @@ export function Providers({ children }: { children: ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <StaffProvider>{children}</StaffProvider>
+      <StaffProvider>
+        {children}
+        <Toaster richColors closeButton />
+      </StaffProvider>
     </QueryClientProvider>
   );
 }
