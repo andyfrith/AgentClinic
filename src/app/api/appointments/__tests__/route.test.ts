@@ -70,6 +70,13 @@ describe("GET /api/appointments", () => {
 });
 
 describe("POST /api/appointments", () => {
+  const validAppointment = {
+    agentId: 1,
+    ailmentId: 1,
+    therapyId: 1,
+    date: "2026-06-01T10:00:00.000Z",
+  };
+
   it("returns 400 for invalid body", async () => {
     const request = new Request("http://localhost/api/appointments", {
       method: "POST",
@@ -80,5 +87,55 @@ describe("POST /api/appointments", () => {
     expect(response.status).toBe(400);
     const body = await response.json();
     expect(body.error).toBe("Invalid input");
+  });
+
+  it("returns 400 for invalid JSON body", async () => {
+    const request = new Request("http://localhost/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: "{not json}",
+    });
+    const response = await POST(request);
+    expect(response.status).toBe(500);
+  });
+
+  it("returns 400 for negative agentId", async () => {
+    const request = new Request("http://localhost/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...validAppointment, agentId: -1 }),
+    });
+    const response = await POST(request);
+    expect(response.status).toBe(400);
+  });
+
+  it("returns 400 for non-integer ids", async () => {
+    const request = new Request("http://localhost/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...validAppointment, agentId: 1.5 }),
+    });
+    const response = await POST(request);
+    expect(response.status).toBe(400);
+  });
+
+  it("returns 400 for invalid date format", async () => {
+    const request = new Request("http://localhost/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...validAppointment, date: "not-a-date" }),
+    });
+    const response = await POST(request);
+    expect(response.status).toBe(400);
+  });
+
+  it("returns 400 for empty string notes", async () => {
+    const request = new Request("http://localhost/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ ...validAppointment, notes: "" }),
+    });
+    const response = await POST(request);
+    expect(response.status).toBe(201);
   });
 });
