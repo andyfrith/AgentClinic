@@ -20,7 +20,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - run: npm ci --omit=optional
+      - run: npm install
 
       - name: TypeScript
         run: npx tsc --noEmit
@@ -62,7 +62,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
 
-      - run: npm ci --omit=optional
+      - run: npm install
 
       - name: Run migrations
         run: npm run db:migrate
