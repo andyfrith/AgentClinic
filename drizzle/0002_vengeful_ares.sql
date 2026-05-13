@@ -1,1 +1,0 @@
-ALTER TABLE "appointments" ADD CONSTRAINT "appointments_agent_id_date_unique" UNIQUE("agent_id","date");

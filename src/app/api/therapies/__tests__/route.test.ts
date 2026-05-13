@@ -15,7 +15,11 @@ vi.mock("@/db", () => ({
     })),
     insert: vi.fn(() => ({
       values: vi.fn(() => ({
-        returning: vi.fn(() => Promise.resolve([{ id: 3, ...mockTherapies[0] }])),
+        returning: vi.fn(() =>
+          Promise.resolve([
+            { id: 3, name: "New", description: "", duration: "30 min", sideEffects: [] },
+          ])
+        ),
       })),
     })),
   },

@@ -37,21 +37,26 @@ export default function StaffAilmentsPage() {
       error={error}
       onSave={async (data) => {
         if (data.id) {
-          await updateAilment.mutateAsync({ id: data.id, ...data } as AilmentFormData & { id: number });
+          await updateAilment.mutateAsync({ id: data.id, ...data } as AilmentFormData & {
+            id: number;
+          });
         } else {
           await createAilment.mutateAsync(data as AilmentFormData);
         }
       }}
-      onDelete={async (id) => { await deleteAilment.mutateAsync(id); }}
+      onDelete={async (id) => {
+        await deleteAilment.mutateAsync(id);
+      }}
       isSaving={createAilment.isPending || updateAilment.isPending}
       isDeleting={deleteAilment.isPending}
       emptyForm={emptyForm}
-      inputIdPrefix="ailment"
       renderItem={(a) => (
         <div className="flex items-center gap-3 min-w-0">
           <div className="min-w-0">
             <div className="font-medium truncate">{(a as AilmentItem).name}</div>
-            <div className="text-sm text-muted-foreground truncate">{(a as AilmentItem).category}</div>
+            <div className="text-sm text-muted-foreground truncate">
+              {(a as AilmentItem).category}
+            </div>
           </div>
           <SeverityBadge severity={(a as AilmentItem).severity} />
         </div>
@@ -61,24 +66,54 @@ export default function StaffAilmentsPage() {
         return (
           <>
             <div>
-              <label htmlFor="ailment-name" className="text-sm font-medium">Name</label>
-              <input id="ailment-name" className="w-full mt-1 px-3 py-2 rounded-md border text-sm" value={f.name} onChange={(e) => onChange({ ...f, name: e.target.value })} />
+              <label htmlFor="ailment-name" className="text-sm font-medium">
+                Name
+              </label>
+              <input
+                id="ailment-name"
+                className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
+                value={f.name}
+                onChange={(e) => onChange({ ...f, name: e.target.value })}
+              />
             </div>
             <div>
-              <label htmlFor="ailment-category" className="text-sm font-medium">Category</label>
-              <input id="ailment-category" className="w-full mt-1 px-3 py-2 rounded-md border text-sm" value={f.category} onChange={(e) => onChange({ ...f, category: e.target.value })} />
+              <label htmlFor="ailment-category" className="text-sm font-medium">
+                Category
+              </label>
+              <input
+                id="ailment-category"
+                className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
+                value={f.category}
+                onChange={(e) => onChange({ ...f, category: e.target.value })}
+              />
             </div>
             <div>
-              <label htmlFor="ailment-severity" className="text-sm font-medium">Severity</label>
-              <select id="ailment-severity" className="w-full mt-1 px-3 py-2 rounded-md border text-sm" value={f.severity} onChange={(e) => onChange({ ...f, severity: e.target.value as "mild" | "moderate" | "severe" })}>
+              <label htmlFor="ailment-severity" className="text-sm font-medium">
+                Severity
+              </label>
+              <select
+                id="ailment-severity"
+                className="w-full mt-1 px-3 py-2 rounded-md border text-sm"
+                value={f.severity}
+                onChange={(e) =>
+                  onChange({ ...f, severity: e.target.value as "mild" | "moderate" | "severe" })
+                }
+              >
                 <option value="mild">Mild</option>
                 <option value="moderate">Moderate</option>
                 <option value="severe">Severe</option>
               </select>
             </div>
             <div>
-              <label htmlFor="ailment-description" className="text-sm font-medium">Description</label>
-              <textarea id="ailment-description" className="w-full mt-1 px-3 py-2 rounded-md border text-sm min-h-[80px]" value={f.description} onChange={(e) => onChange({ ...f, description: e.target.value })} />
+              <label htmlFor="ailment-description" className="text-sm font-medium">
+                Description
+              </label>
+              <textarea
+                id="ailment-description"
+                className="w-full mt-1 px-3 py-2 rounded-md border text-sm min-h-[80px]"
+                value={f.description}
+                onChange={(e) => onChange({ ...f, description: e.target.value })}
+              />
             </div>
           </>
         );

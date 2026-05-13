@@ -33,6 +33,7 @@ npm run dev                # http://localhost:3000
 | `npm run db:seed` | Seed database |
 | `scripts/pre-merge-check.sh` | Run all pre-merge quality gates |
 | `scripts/update-changelog.sh` | Add entries to CHANGELOG.md |
+| `.github/workflows/ci.yml` | CI pipeline (runs on every push to any PR branch and master) |
 
 ## Architecture
 

@@ -9,6 +9,8 @@ const mockAgent = {
   specialty: "Cardiology",
   status: "active" as const,
   bio: "Experienced cardiologist with 15 years.",
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 describe("AgentCard", () => {

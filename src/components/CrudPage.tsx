@@ -14,14 +14,17 @@ export type CrudPageProps<T extends CrudItem> = {
   data: T[] | undefined;
   isLoading: boolean;
   error: Error | null;
-  onSave: (data: Partial<T> & { id?: number }) => Promise<void>;
+  onSave: (data: Record<string, unknown> & { id?: number }) => Promise<void>;
   onDelete: (id: number) => Promise<void>;
   isSaving: boolean;
   isDeleting: boolean;
   renderItem: (item: T, canEdit: boolean) => ReactNode;
-  renderForm: (form: Partial<T>, onChange: (form: Partial<T>) => void, editingId: number | null) => ReactNode;
-  emptyForm: Partial<T>;
-  inputIdPrefix: string;
+  renderForm: (
+    form: Record<string, unknown>,
+    onChange: (form: Record<string, unknown>) => void,
+    editingId: number | null
+  ) => ReactNode;
+  emptyForm: Record<string, unknown>;
 };
 
 export function CrudPage<T extends CrudItem>({
@@ -37,12 +40,11 @@ export function CrudPage<T extends CrudItem>({
   renderItem,
   renderForm,
   emptyForm,
-  inputIdPrefix,
 }: CrudPageProps<T>) {
   const { canEdit } = useStaff();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
-  const [form, setForm] = useState<Partial<T>>(emptyForm);
+  const [form, setForm] = useState<Record<string, unknown>>(emptyForm);
   const [confirmDelete, setConfirmDelete] = useState<number | null>(null);
 
   const openCreate = () => {
@@ -53,14 +55,14 @@ export function CrudPage<T extends CrudItem>({
 
   const openEdit = (item: T) => {
     setEditingId(item.id);
-    setForm(item);
+    setForm(item as unknown as Record<string, unknown>);
     setDialogOpen(true);
   };
 
   const handleSave = async () => {
     try {
       if (editingId) {
-        await onSave({ id: editingId, ...form });
+        await onSave({ ...form, id: editingId });
       } else {
         await onSave(form);
       }
@@ -129,7 +131,9 @@ export function CrudPage<T extends CrudItem>({
       <Dialog open={dialogOpen && !confirmDelete} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>{editingId ? `Edit ${entityName.slice(0, -1)}` : `Add ${entityName.slice(0, -1)}`}</DialogTitle>
+            <DialogTitle>
+              {editingId ? `Edit ${entityName.slice(0, -1)}` : `Add ${entityName.slice(0, -1)}`}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-4">
             {renderForm(form, setForm, editingId)}
@@ -151,7 +155,8 @@ export function CrudPage<T extends CrudItem>({
             <DialogTitle>Confirm Delete</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            Are you sure you want to delete this {entityName.slice(0, -1)}? This action cannot be undone.
+            Are you sure you want to delete this {entityName.slice(0, -1)}? This action cannot be
+            undone.
           </p>
           <div className="flex justify-end gap-3 pt-2">
             <Button variant="outline" onClick={() => setConfirmDelete(null)}>

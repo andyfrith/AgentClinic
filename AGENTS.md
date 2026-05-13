@@ -18,6 +18,23 @@ Consult multiple relevant specs before deciding on an approach. If the brief con
 
 All work must be done on a branch separate from `master`. No commits, changes, or code generation on `master`. Branch naming: `<type>/<short-description>` (e.g. `feat/agent-filter`, `chore/capture-screenshots`).
 
+## Pre-merge checks
+
+Before merging any branch to `master`:
+
+1. Run `scripts/pre-merge-check.sh` locally — this validates typecheck, lint, format, unit tests, build, E2E smoke test, and changelog.
+2. Verify CI is green on the PR branch (`.github/workflows/ci.yml` runs on every push).
+3. Wait for CI to complete on `master` after merging — if it fails, revert immediately.
+
+## Sequential merges (merge trains)
+
+When merging multiple branches in sequence (e.g., a series of audit branches):
+
+- Tests that pass on each branch in isolation may fail in the combined state.
+- **After each merge in the sequence, re-run `scripts/pre-merge-check.sh` on `master`** before merging the next branch.
+- If branches modify overlapping files, create a short-lived integration branch to validate the combined state first.
+- The CI workflow runs on push to `master` — watch its output after each merge. Do not proceed to the next merge until CI passes.
+
 ## Project overview
 
 AgentClinic is a whimsical clinic management dashboard for overworked AI agents. Built with Next.js (App Router), TypeScript, Drizzle ORM, TanStack Query, shadcn/ui, Tailwind CSS, and Framer Motion.

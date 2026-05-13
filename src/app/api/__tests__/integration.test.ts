@@ -7,7 +7,8 @@ vi.mock("@/db", () => ({
     select: vi.fn(() => ({
       from: vi.fn(() => {
         const result = mockDbResult;
-        return {
+        const queryPromise = Promise.resolve(result);
+        Object.assign(queryPromise, {
           where: vi.fn(() => ({
             limit: vi.fn(() => Promise.resolve(result)),
             orderBy: vi.fn(() => Promise.resolve(result)),
@@ -24,7 +25,8 @@ vi.mock("@/db", () => ({
             where: vi.fn(() => Promise.resolve([])),
             orderBy: vi.fn(() => Promise.resolve([])),
           })),
-        };
+        });
+        return queryPromise;
       }),
     })),
   },

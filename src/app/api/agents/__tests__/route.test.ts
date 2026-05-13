@@ -8,7 +8,7 @@ vi.mock("@/app/api/_helpers/staff-auth", () => ({
   ),
 }));
 
-const mockInsertResult: unknown[] = [];
+let mockInsertResult: unknown[] = [];
 let mockAgentsResult: unknown[] = [];
 
 vi.mock("@/db", () => ({
@@ -46,6 +46,7 @@ const mockAgents = [
 beforeEach(() => {
   vi.restoreAllMocks();
   mockAgentsResult = mockAgents;
+  mockInsertResult = [];
 });
 
 describe("GET /api/agents", () => {
@@ -71,9 +72,15 @@ describe("GET /api/agents", () => {
 });
 
 describe("POST /api/agents", () => {
-  const validAgent = { name: "Dr. New", specialty: "Radiology", status: "active", bio: "A new doctor." };
+  const validAgent = {
+    name: "Dr. New",
+    specialty: "Radiology",
+    status: "active",
+    bio: "A new doctor.",
+  };
 
   it("creates an agent with valid data", async () => {
+    mockInsertResult = [mockAgents[0]];
     const request = new Request("http://localhost/api/agents", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

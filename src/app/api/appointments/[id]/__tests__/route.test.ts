@@ -57,20 +57,19 @@ let shouldReject = false;
 vi.mock("@/db", () => ({
   db: {
     select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        innerJoin: vi.fn(() => ({
-          innerJoin: vi.fn(() => ({
-            innerJoin: vi.fn(() => ({
-              where: vi.fn(() => ({
-                limit: vi.fn(() => {
-                  if (shouldReject) return Promise.reject(new Error("DB error"));
-                  return Promise.resolve(mockAppointmentRow);
-                }),
-              })),
-            })),
+      from: vi.fn(() => {
+        const queryPromise = Promise.resolve(mockAppointmentRow);
+        Object.assign(queryPromise, {
+          innerJoin: vi.fn(() => queryPromise),
+          where: vi.fn(() => ({
+            limit: vi.fn(() => {
+              if (shouldReject) return Promise.reject(new Error("DB error"));
+              return Promise.resolve(mockAppointmentRow);
+            }),
           })),
-        })),
-      })),
+        });
+        return queryPromise;
+      }),
     })),
     update: vi.fn(() => ({
       set: vi.fn(() => ({
@@ -85,6 +84,7 @@ vi.mock("@/db", () => ({
 beforeEach(() => {
   vi.restoreAllMocks();
   shouldReject = false;
+  mockAppointmentRow[0].status = "scheduled";
 });
 
 describe("GET /api/appointments/[id]", () => {
@@ -148,6 +148,7 @@ describe("PATCH /api/appointments/[id]", () => {
   });
 
   it("returns 400 for completed → cancelled invalid transition", async () => {
+    mockAppointmentRow[0].status = "completed";
     const request = new Request("http://localhost/api/appointments/1", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },

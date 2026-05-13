@@ -14,15 +14,31 @@ let mockInsertResult: unknown[] = [];
 vi.mock("@/db", () => ({
   db: {
     select: vi.fn(() => ({
-      from: vi.fn(() => ({
-        innerJoin: vi.fn(() => ({
-          innerJoin: vi.fn(() => ({
-            innerJoin: vi.fn(() => ({
-              orderBy: vi.fn(() => Promise.resolve(mockAppointmentsResult)),
-            })),
+      from: vi.fn(() => {
+        const queryPromise = Promise.resolve(mockAppointmentsResult);
+        Object.assign(queryPromise, {
+          innerJoin: vi.fn(() => {
+            const innerPromise = Promise.resolve(mockAppointmentsResult);
+            Object.assign(innerPromise, {
+              innerJoin: vi.fn(() => {
+                const innerPromise2 = Promise.resolve(mockAppointmentsResult);
+                Object.assign(innerPromise2, {
+                  innerJoin: vi.fn(() => ({
+                    orderBy: vi.fn(() => Promise.resolve(mockAppointmentsResult)),
+                  })),
+                });
+                return innerPromise2;
+              }),
+            });
+            return innerPromise;
+          }),
+          where: vi.fn(() => ({
+            limit: vi.fn(() => Promise.resolve([])),
+            orderBy: vi.fn(() => Promise.resolve(mockAppointmentsResult)),
           })),
-        })),
-      })),
+        });
+        return queryPromise;
+      }),
     })),
     insert: vi.fn(() => ({
       values: vi.fn(() => ({
@@ -130,6 +146,19 @@ describe("POST /api/appointments", () => {
   });
 
   it("returns 400 for empty string notes", async () => {
+    mockInsertResult = [
+      {
+        id: 3,
+        agentId: 1,
+        ailmentId: 1,
+        therapyId: 1,
+        date: new Date("2026-06-01T10:00:00.000Z"),
+        status: "scheduled",
+        notes: "",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ];
     const request = new Request("http://localhost/api/appointments", {
       method: "POST",
       headers: { "Content-Type": "application/json" },

@@ -20,6 +20,21 @@ This runs all checks below and exits zero only if all pass.
 
 ---
 
+## CI enforcement
+
+A GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push to any PR branch and on push to `master`. It enforces:
+
+- TypeScript type check
+- ESLint (zero warnings)
+- Prettier format check
+- Unit tests (all pass)
+- Production build (succeeds)
+- E2E smoke test (against a fresh database)
+
+**Rule**: PRs cannot be merged unless CI is green. This is the safety net that catches failures even if the developer forgets to run the pre-merge script locally. For new projects, a CI pipeline must be configured before the first merge.
+
+---
+
 ## Validation steps
 
 ### 1. README
@@ -124,13 +139,55 @@ scripts/update-changelog.sh -
 - Branch naming convention: `<type>/<short-description>` (e.g. `feat/agent-filter`, `fix/avatar-loading`, `chore/update-deps`, `docs/api-readme`).
 - The only exception is an emergency hotfix on a release branch, which still bypasses `main` directly.
 
+---
+
+## Merge train (sequential merges)
+
+When merging multiple branches in sequence (e.g., a series of audit branches that touch overlapping files), the tests can pass on each branch in isolation but fail once merged together. This is exactly what happened when audit branches were merged sequentially without re-validation.
+
+**Rules for sequential merges:**
+
+1. **Run tests on the target branch before merging** — before merging branch B into `main`, ensure `main` merged into B passes all tests. This catches conflicts introduced by branch A.
+
+2. **Re-run the pre-merge check after every merge in a sequence** — after merging each branch in a train, run `scripts/pre-merge-check.sh` on `main` before proceeding to merge the next branch.
+
+3. **Validate the combined state** — when branches modify overlapping files (e.g., one branch adds route handlers, another adds tests for them), create a short-lived integration branch that merges both together first, run tests on it, then merge to `main`.
+
+4. **CI is your safety net** — the `.github/workflows/ci.yml` workflow runs on push to `master`. If a merged branch breaks `master`, CI will fail on the push event and you can revert before the next developer pulls.
+
+---
+
+## Post-merge verification
+
+After any merge to `main`:
+
+1. **Wait for CI to complete** — verify the `CI` workflow passes on the `master` branch.
+2. **Check for cascading failures** — if tests fail on `master` post-merge, revert the merge commit immediately and investigate.
+3. **Pull the latest master and re-validate** — other developers should run `scripts/pre-merge-check.sh` after pulling the latest `master` to ensure their working tree is clean.
+
+---
+
+## Self-merge note
+
+When the same person authors a PR and merges it (no code review), they are responsible for:
+
+1. Verifying CI is green on the PR branch
+2. Waiting for CI to complete post-merge on `master`
+3. Ensuring the merge commit doesn't introduce failures
+
+This is the scenario that failed in practice: the pre-merge validation skill existed, the script existed, but neither was enforced automatically. The CI workflow closes this gap by making validtion mandatory rather than voluntary.
+
+---
+
 ## Pre-merge checklist
 
 - [ ] Changes are on a branch (not `main`) — verify with `git branch --show-current`
-- [ ] Updated `README.md` if project info, setup, or features changed
 - [ ] `npm run validate` passes (typecheck + lint + format + unit tests)
-- [ ] `npm run test:e2e` passes (all Playwright tests)
+- [ ] `npm run build` passes
+- [ ] `npx playwright test e2e/smoke.spec.ts` passes
 - [ ] New code has corresponding unit and/or e2e tests
 - [ ] Spec docs in `specs/` are up to date with what was built
 - [ ] `CHANGELOG.md` has entries for all changes in this branch
+- [ ] CI is green on the PR branch
+- [ ] For sequential merges: tests re-run on `master` after the previous merge in the train
 - [ ] Specs, changelog, and validation are all committed
