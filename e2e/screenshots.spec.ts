@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs";
 
 const SCREENSHOT_DIR = path.resolve(__dirname, "..", "screenshots");
+const BASELINE_DIR = path.resolve(__dirname, "..", "screenshots", "baseline");
 
 async function waitForAnimations(page: import("@playwright/test").Page) {
   await page.waitForFunction(
@@ -25,6 +26,7 @@ async function waitForAnimations(page: import("@playwright/test").Page) {
 test.describe("Screenshot capture", () => {
   test.beforeAll(() => {
     fs.mkdirSync(SCREENSHOT_DIR, { recursive: true });
+    fs.mkdirSync(BASELINE_DIR, { recursive: true });
   });
 
   test.beforeEach(async ({ page }) => {
@@ -256,6 +258,44 @@ test.describe("Screenshot capture", () => {
     await page.screenshot({
       path: path.join(SCREENSHOT_DIR, "staff-therapies.png"),
       fullPage: true,
+    });
+  });
+
+  test.describe("Visual integrity checks", () => {
+    test("all screenshot files exist with minimum file size", () => {
+      const expectedScreenshots = [
+        "home.png",
+        "agents.png",
+        "agent-detail.png",
+        "ailments.png",
+        "ailment-detail.png",
+        "therapies.png",
+        "therapy-detail.png",
+        "staff-login.png",
+        "staff-dashboard.png",
+        "staff-agents.png",
+        "staff-ailments.png",
+        "staff-therapies.png",
+      ];
+      for (const name of expectedScreenshots) {
+        const filePath = path.join(SCREENSHOT_DIR, name);
+        expect(fs.existsSync(filePath)).toBe(true);
+        const stats = fs.statSync(filePath);
+        expect(stats.size).toBeGreaterThan(1000);
+      }
+    });
+
+    test("no console errors during screenshot capture", async ({ page }) => {
+      const errors: string[] = [];
+      page.on("console", (msg) => {
+        if (msg.type() === "error") errors.push(msg.text());
+      });
+
+      await page.goto("/");
+      await page.waitForLoadState("networkidle");
+      await page.waitForTimeout(1000);
+
+      expect(errors.filter((e) => !e.includes("favicon"))).toEqual([]);
     });
   });
 });
