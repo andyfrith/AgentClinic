@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { Staff } from "@/db/schema";
+import { authHeaders } from "@/lib/auth";
 
 type StaffDetail = Staff & {
   appointments: Array<{
@@ -21,23 +22,6 @@ type CreateStaffInput = {
 };
 
 type UpdateStaffInput = Partial<CreateStaffInput>;
-
-function getStaffId(): string | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = localStorage.getItem("staff");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return String(parsed.id);
-    }
-  } catch {}
-  return null;
-}
-
-function authHeaders(): Record<string, string> {
-  const id = getStaffId();
-  return id ? { "x-staff-id": id } : {};
-}
 
 async function fetchStaff(): Promise<Staff[]> {
   const res = await fetch("/api/staff");

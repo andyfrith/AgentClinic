@@ -18,6 +18,23 @@ Consult multiple relevant specs before deciding on an approach. If the brief con
 
 All work must be done on a branch separate from `master`. No commits, changes, or code generation on `master`. Branch naming: `<type>/<short-description>` (e.g. `feat/agent-filter`, `chore/capture-screenshots`).
 
+## Pre-merge checks
+
+Before merging any branch to `master`:
+
+1. Run `scripts/pre-merge-check.sh` locally — this validates typecheck, lint, format, unit tests, build, E2E smoke test, and changelog.
+2. Verify CI is green on the PR branch (`.github/workflows/ci.yml` runs on every push).
+3. Wait for CI to complete on `master` after merging — if it fails, revert immediately.
+
+## Sequential merges (merge trains)
+
+When merging multiple branches in sequence (e.g., a series of audit branches):
+
+- Tests that pass on each branch in isolation may fail in the combined state.
+- **After each merge in the sequence, re-run `scripts/pre-merge-check.sh` on `master`** before merging the next branch.
+- If branches modify overlapping files, create a short-lived integration branch to validate the combined state first.
+- The CI workflow runs on push to `master` — watch its output after each merge. Do not proceed to the next merge until CI passes.
+
 ## Project overview
 
 AgentClinic is a whimsical clinic management dashboard for overworked AI agents. Built with Next.js (App Router), TypeScript, Drizzle ORM, TanStack Query, shadcn/ui, Tailwind CSS, and Framer Motion.
@@ -39,6 +56,10 @@ Before and during each phase, proactively watch for scope creep. Concretely:
 2. **During implementation** — if a task grows beyond its planned scope (e.g., a "quick actions" section becomes a multi-endpoint CRUD system), pause, flag it, and propose moving the excess to a new phase on the roadmap before continuing.
 
 When splitting off scope: update the roadmap by adjusting the current phase entry and inserting a new phase after it. Annotate descoped items in the current plan/validation docs with `[~]` and a `→ moved to Phase N` note. The goal is to keep each phase a cohesive vertical slice that can ship independently.
+
+## Audit recommendations tracking
+
+When implementing audit recommendations (from `specs/process-audit.md`), reference each recommendation by its `#` number in commit messages and PR descriptions. Use the pattern `Audit #N: description` for commits and group related recommendations in changelog entries under `### Process` / `### Code Quality` / `### Security` / `### Tests` / `### Docs` subheadings.
 
 ## Relevant files and directories
 

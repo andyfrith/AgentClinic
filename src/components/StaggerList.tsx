@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import type { ReactNode } from "react";
+import { Children, cloneElement, isValidElement, type ReactNode } from "react";
 
 const containerVariants: Variants = {
   hidden: {},
@@ -25,11 +25,13 @@ export function StaggerList({ children, className }: { children: ReactNode; clas
       variants={containerVariants}
       className={className}
     >
-      {children}
+      {Children.map(children, (child) =>
+        isValidElement(child) ? (
+          <motion.div variants={itemVariants}>{cloneElement(child)}</motion.div>
+        ) : (
+          child
+        )
+      )}
     </motion.div>
   );
-}
-
-export function StaggerItem({ children }: { children: ReactNode }) {
-  return <motion.div variants={itemVariants}>{children}</motion.div>;
 }

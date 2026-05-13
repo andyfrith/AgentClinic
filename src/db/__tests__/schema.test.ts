@@ -67,6 +67,8 @@ describe("agents schema", () => {
       specialty: "Cardiology",
       status: "active",
       bio: "A cardiologist.",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
     expect(agent.id).toBe(1);
     expect(agent.name).toBe("Dr. Smith");

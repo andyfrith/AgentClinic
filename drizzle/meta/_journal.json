@@ -15,6 +15,13 @@
       "when": 1778524027445,
       "tag": "0001_talented_sprite",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1778636599661,
+      "tag": "0002_cloudy_karnak",
+      "breakpoints": true
     }
   ]
 }

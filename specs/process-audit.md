@@ -322,4 +322,56 @@ Copy this checklist into the validation doc of each future phase's spec, or run 
 
 ---
 
+## 8. Post-Audit Remediation (2026-05-12)
+
+On 2026-05-12, a real failure exposed a gap the original audit warned about but didn't close: **tests passed on paper but failed on `master`**.
+
+### Incident Summary
+
+Seven test failures existed on `master` despite:
+- All merge branches passing their individual CI
+- The `pre-merge-check.sh` script existing
+- The PR template listing test validation
+- The pre-merge-validation skill documenting the test requirement
+
+**Root cause:** Five audit branches were merged sequentially without re-running tests on `master` between merges. Each branch's tests passed in isolation, but the combined state had mock-vs-route misalignments that only appeared after all branches were merged. The manual pre-merge check was bypassed because the merging developer relied on in-isolation validation.
+
+### Gaps Identified
+
+| Gap | Description |
+|---|---|
+| No CI enforcement | Pre-merge checks were manual/voluntary — could be skipped |
+| No post-merge validation | Tests never ran on `master` after the final merge in a sequence |
+| No merge train process | No documented rule for re-validation between sequential merges |
+| Self-merge without accountability | Single developer merging own PRs with no reviewer or CI to catch omissions |
+
+### Remediation Actions Taken
+
+| Action | File | Description |
+|---|---|---|
+| Created CI workflow | `.github/workflows/ci.yml` | Runs typecheck, lint, format, unit tests, build on every PR push and push to master |
+| Updated pre-merge-validation skill | `specs/skills/pre-merge-validation.md` | Added "Merge train" section, "Post-merge verification" section, CI reference |
+| Updated process audit | This section (§8) | Documents the incident and remediation |
+| Will fix test failures | `src/app/api/*/__tests__/*` | 7 pre-existing mock misalignments to be corrected |
+
+### New Audit Recommendations
+
+| # | Recommendation | Effort | Impact |
+|---|---|---|---|
+| 23 | **Require CI before merge** — configure branch protection rules on GitHub to require CI status checks to pass before merging | Small | Enforces the CI pipeline |
+| 24 | **Merge train validation** — documented in pre-merge-validation skill; when merging N branches in sequence, run tests on master after each merge | Small | Prevents combined-state failures |
+| 25 | **Post-merge CI verification** — the CI workflow already runs on push to master; the process skill now requires waiting for it to complete post-merge | Small | Catches breakage immediately |
+
+### Updated Periodic Audit Checklist
+
+Add these items to the copy in each phase validation doc:
+
+#### Merge Safety
+- [ ] If merging multiple branches in sequence, tests were re-run on `master` after each intermediate merge
+- [ ] CI is green on the PR branch before merging
+- [ ] CI completed successfully on `master` after the last merge
+- [ ] Branch protection rules require CI status checks (if GitHub is used)
+
+---
+
 *End of audit document. Next audit recommended after Phase 9 or upon significant process change.*
