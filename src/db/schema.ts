@@ -16,6 +16,8 @@ export const agents = pgTable("agents", {
   specialty: varchar("specialty", { length: 255 }).notNull(),
   status: varchar("status", { length: 50 }).notNull().default("active"),
   bio: text("bio").notNull().default(""),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const severityEnum = pgEnum("severity", ["mild", "moderate", "severe"]);

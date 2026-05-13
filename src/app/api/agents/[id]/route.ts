@@ -89,7 +89,7 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
 
     const [updated] = await db
       .update(agents)
-      .set(bodyParsed.data)
+      .set({ ...bodyParsed.data, updatedAt: new Date() })
       .where(eq(agents.id, id))
       .returning();
 
