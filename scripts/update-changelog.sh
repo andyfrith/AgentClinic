@@ -13,6 +13,8 @@ All notable changes to this project are documented below.
 EOF
 fi
 
+VALID_SECTIONS="Process|Code Quality|Security|Tests|Docs|API|Data Model|UI|Infrastructure|Specs|Bug Fixes|Screenshots|Changelog"
+
 DATE=$(date +%Y-%m-%d)
 
 # Usage
@@ -30,6 +32,8 @@ if [ $# -eq 0 ] || [ "$1" = "--help" ]; then
   echo "  - Bullet describing the change"
   echo "  - Another bullet"
   echo ""
+  echo "Valid section names: $VALID_SECTIONS"
+  echo ""
   echo "Example:"
   echo "  echo -e \"### API\\n- Add DELETE endpoint for agents\" | $0 -"
   exit 0
@@ -44,6 +48,19 @@ fi
 
 if [ -z "$ENTRIES" ]; then
   echo "Error: no entries provided" >&2
+  exit 1
+fi
+
+# Validate section headings
+INVALID_SECTIONS=$(echo "$ENTRIES" | grep "^### " | sed 's/^### //' | while IFS= read -r section; do
+  if ! echo "$VALID_SECTIONS" | tr '|' '\n' | grep -qxF "$section"; then
+    echo "$section"
+  fi
+done)
+if [ -n "$INVALID_SECTIONS" ]; then
+  echo "Error: invalid section heading(s) found:" >&2
+  echo "$INVALID_SECTIONS" | sed 's/^/  /' >&2
+  echo "Valid sections: $VALID_SECTIONS" >&2
   exit 1
 fi
 

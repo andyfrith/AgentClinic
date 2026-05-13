@@ -27,7 +27,7 @@ section() {
 }
 
 # ──────────────────────────────────────────────
-section "1/6  README"
+section "1/8  README"
 
 if [ -f README.md ]; then
   if grep -q "Input from stakeholders" README.md 2>/dev/null; then
@@ -40,7 +40,7 @@ else
 fi
 
 # ──────────────────────────────────────────────
-section "2/6  TypeScript"
+section "2/8  TypeScript"
 
 if npx tsc --noEmit 2>/dev/null; then
   pass "TypeScript compiles with zero errors"
@@ -49,7 +49,7 @@ else
 fi
 
 # ──────────────────────────────────────────────
-section "3/6  Lint"
+section "3/8  Lint"
 
 if npm run lint 2>/dev/null; then
   pass "Lint passes with no warnings"
@@ -58,7 +58,7 @@ else
 fi
 
 # ──────────────────────────────────────────────
-section "4/6  Format"
+section "4/8  Format"
 
 if command -v npx &>/dev/null && npx prettier --check "src/**/*.{ts,tsx,js,jsx,json,css,md}" 2>/dev/null; then
   pass "Code formatting is consistent"
@@ -68,7 +68,7 @@ else
 fi
 
 # ──────────────────────────────────────────────
-section "5/6  Unit Tests"
+section "5/8  Unit Tests"
 
 if npm run test:run 2>/dev/null; then
   pass "All unit tests pass"
@@ -77,7 +77,26 @@ else
 fi
 
 # ──────────────────────────────────────────────
-section "6/6  Changelog"
+section "6/8  Build"
+
+if npm run build 2>/dev/null; then
+  pass "Production build succeeds"
+else
+  fail "Build failed — run 'npm run build' for details"
+fi
+
+# ──────────────────────────────────────────────
+section "7/8  E2E Smoke Test"
+
+if npx playwright test e2e/smoke.spec.ts --reporter=list 2>/dev/null; then
+  pass "E2E smoke test passes"
+else
+  echo "  ℹ  E2E smoke test failed — run 'npx playwright test e2e/smoke.spec.ts' for details"
+  fail "E2E smoke test failed"
+fi
+
+# ──────────────────────────────────────────────
+section "8/8  Changelog"
 
 if [ -f CHANGELOG.md ]; then
   today=$(date +%Y-%m-%d)

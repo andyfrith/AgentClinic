@@ -40,6 +40,10 @@ Before and during each phase, proactively watch for scope creep. Concretely:
 
 When splitting off scope: update the roadmap by adjusting the current phase entry and inserting a new phase after it. Annotate descoped items in the current plan/validation docs with `[~]` and a `→ moved to Phase N` note. The goal is to keep each phase a cohesive vertical slice that can ship independently.
 
+## Audit recommendations tracking
+
+When implementing audit recommendations (from `specs/process-audit.md`), reference each recommendation by its `#` number in commit messages and PR descriptions. Use the pattern `Audit #N: description` for commits and group related recommendations in changelog entries under `### Process` / `### Code Quality` / `### Security` / `### Tests` / `### Docs` subheadings.
+
 ## Relevant files and directories
 
 | Path | Purpose |
