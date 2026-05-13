@@ -1,0 +1,46 @@
+name: Deploy to Vercel
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Deployment environment
+        type: choice
+        options:
+          - production
+          - preview
+        default: production
+  push:
+    branches: [master]
+
+env:
+  NODE_VERSION: 20
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm install
+
+      - name: Determine deploy args
+        id: args
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.environment }}" == "preview" ]]; then
+            echo "flags=" >> $GITHUB_OUTPUT
+          else
+            echo "flags=--prod" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Deploy to Vercel
+        run: |
+          npx vercel deploy \
+            --token=${{ secrets.VERCEL_TOKEN }} \
+            ${{ steps.args.outputs.flags }} \
+            --yes

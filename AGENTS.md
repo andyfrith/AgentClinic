@@ -26,7 +26,8 @@ Before merging any branch to `master`:
 
 1. Run `scripts/pre-merge-check.sh` locally — this validates typecheck, lint, format, unit tests, build, E2E smoke test, and changelog.
 2. Verify CI is green on the PR branch (`.github/workflows/ci.yml` runs on every push).
-3. Wait for CI to complete on `master` after merging — if it fails, revert immediately.
+3. Verify the deploy workflow is valid (`.github/workflows/deploy.yml` — validate with `npx action-validator .github/workflows/deploy.yml` or GitHub web UI).
+4. Wait for CI to complete on `master` after merging — if it fails, revert immediately.
 
 ## Sequential merges (merge trains)
 
@@ -69,7 +70,7 @@ When implementing audit recommendations (from `specs/process-audit.md`), referen
 |---|---|
 | `specs/` | All project specs |
 | `specs/skills/` | Skill/workflow documentation |
-| `src/app/` | Next.js App Router pages |
+| `.github/workflows/deploy.yml` | Vercel deploy workflow |
 | `src/db/` | Drizzle schema and DB utilities |
 | `src/components/` | React components |
 | `src/hooks/` | TanStack Query hooks |
@@ -88,4 +89,4 @@ Use the skill tool to load a skill when a task matches its description.
 | Update changelog | `specs/skills/update-changelog.md` | Structured changelog entry management |
 | Capture screenshots | `specs/skills/capture-screenshots.md` | Playwright screenshot capture and README updates |
 | Code review | `specs/skills/code-review.md` | Checklist for reviewing PRs |
-| Deployment | `specs/skills/deployment.md` | Production build, database, smoke test, rollback |
+| Deployment | `specs/skills/deployment.md` | Vercel deploy, Neon database, production build, smoke test, rollback |
