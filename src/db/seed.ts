@@ -1,6 +1,6 @@
 import "dotenv/config";
-import postgres from "postgres";
-import { drizzle } from "drizzle-orm/postgres-js";
+import { neon } from "@neondatabase/serverless";
+import { drizzle } from "drizzle-orm/neon-http";
 import {
   agents,
   ailments,
@@ -12,8 +12,8 @@ import {
   appointmentStaff,
 } from "./schema";
 
-const client = postgres(process.env.DATABASE_URL!);
-const db = drizzle(client);
+const sql = neon(process.env.DATABASE_URL!);
+const db = drizzle(sql);
 
 const seedAgents = [
   {
@@ -244,11 +244,11 @@ async function seed() {
   await db.delete(therapies);
   await db.delete(ailments);
   await db.delete(agents);
-  await client`ALTER SEQUENCE agents_id_seq RESTART WITH 1`;
-  await client`ALTER SEQUENCE ailments_id_seq RESTART WITH 1`;
-  await client`ALTER SEQUENCE therapies_id_seq RESTART WITH 1`;
-  await client`ALTER SEQUENCE appointments_id_seq RESTART WITH 1`;
-  await client`ALTER SEQUENCE staff_id_seq RESTART WITH 1`;
+  await sql`ALTER SEQUENCE agents_id_seq RESTART WITH 1`;
+  await sql`ALTER SEQUENCE ailments_id_seq RESTART WITH 1`;
+  await sql`ALTER SEQUENCE therapies_id_seq RESTART WITH 1`;
+  await sql`ALTER SEQUENCE appointments_id_seq RESTART WITH 1`;
+  await sql`ALTER SEQUENCE staff_id_seq RESTART WITH 1`;
   const insertedAgents = await db.insert(agents).values(seedAgents).returning();
 
   console.log("Seeding ailments...");
