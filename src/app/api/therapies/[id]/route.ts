@@ -10,7 +10,7 @@ const paramsSchema = z.object({
 
 const updateSchema = z.object({
   name: z.string().min(1).max(255).optional(),
-  description: z.string().optional(),
+  description: z.string().max(5000).optional(),
   duration: z.string().max(100).optional(),
   sideEffects: z.array(z.string()).optional(),
 });

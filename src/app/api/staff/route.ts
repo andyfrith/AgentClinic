@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { staff } from "@/db/schema";
 import { z } from "zod";
 import { requireRole } from "@/app/api/_helpers/staff-auth";
+import { rateLimitMiddleware } from "@/lib/rate-limit";
 
 const createSchema = z.object({
   name: z.string().min(1).max(255),
@@ -22,6 +23,9 @@ export async function GET() {
 export async function POST(request: Request) {
   const auth = await requireRole(request, ["admin"]);
   if (auth) return auth;
+
+  const rate = rateLimitMiddleware(request);
+  if (rate) return rate;
 
   try {
     const body = await request.json();

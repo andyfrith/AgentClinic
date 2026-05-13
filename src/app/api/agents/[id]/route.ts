@@ -13,7 +13,7 @@ const updateSchema = z.object({
   avatar: z.string().max(255).optional(),
   specialty: z.string().max(255).optional(),
   status: z.string().max(50).optional(),
-  bio: z.string().optional(),
+  bio: z.string().max(5000).optional(),
 });
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {

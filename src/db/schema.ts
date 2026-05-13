@@ -86,23 +86,27 @@ export const appointmentStatusEnum = pgEnum("appointment_status", [
   "cancelled",
 ]);
 
-export const appointments = pgTable("appointments", {
-  id: serial("id").primaryKey(),
-  agentId: integer("agent_id")
-    .notNull()
-    .references(() => agents.id, { onDelete: "cascade" }),
-  ailmentId: integer("ailment_id")
-    .notNull()
-    .references(() => ailments.id, { onDelete: "cascade" }),
-  therapyId: integer("therapy_id")
-    .notNull()
-    .references(() => therapies.id, { onDelete: "cascade" }),
-  date: timestamp("date").notNull(),
-  status: appointmentStatusEnum("status").notNull().default("scheduled"),
-  notes: text("notes").default(""),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
+export const appointments = pgTable(
+  "appointments",
+  {
+    id: serial("id").primaryKey(),
+    agentId: integer("agent_id")
+      .notNull()
+      .references(() => agents.id, { onDelete: "cascade" }),
+    ailmentId: integer("ailment_id")
+      .notNull()
+      .references(() => ailments.id, { onDelete: "cascade" }),
+    therapyId: integer("therapy_id")
+      .notNull()
+      .references(() => therapies.id, { onDelete: "cascade" }),
+    date: timestamp("date").notNull(),
+    status: appointmentStatusEnum("status").notNull().default("scheduled"),
+    notes: text("notes").default(""),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (t) => [unique().on(t.agentId, t.date)]
+);
 
 export type Appointment = typeof appointments.$inferSelect;
 export type NewAppointment = typeof appointments.$inferInsert;
