@@ -10,7 +10,7 @@ const paramsSchema = z.object({
 
 const updateSchema = z.object({
   status: z.enum(["scheduled", "in-progress", "completed", "cancelled"]).optional(),
-  notes: z.string().optional(),
+  notes: z.string().max(5000).optional(),
   date: z.string().datetime().optional(),
 });
 

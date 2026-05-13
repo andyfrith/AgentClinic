@@ -2,10 +2,11 @@ import { db } from "@/db";
 import { therapies } from "@/db/schema";
 import { z } from "zod";
 import { requireRole } from "@/app/api/_helpers/staff-auth";
+import { rateLimitMiddleware } from "@/lib/rate-limit";
 
 const createSchema = z.object({
   name: z.string().min(1).max(255),
-  description: z.string().optional(),
+  description: z.string().max(5000).optional(),
   duration: z.string().max(100),
   sideEffects: z.array(z.string()).optional(),
 });
@@ -22,6 +23,9 @@ export async function GET() {
 export async function POST(request: Request) {
   const auth = await requireRole(request, ["editor", "admin"]);
   if (auth) return auth;
+
+  const rate = rateLimitMiddleware(request);
+  if (rate) return rate;
 
   try {
     const body = await request.json();
