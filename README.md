@@ -34,6 +34,7 @@ npm run dev                # http://localhost:3000
 | `scripts/pre-merge-check.sh` | Run all pre-merge quality gates |
 | `scripts/update-changelog.sh` | Add entries to CHANGELOG.md |
 | `.github/workflows/ci.yml` | CI pipeline (runs on every push to any PR branch and master) |
+| `.github/workflows/deploy.yml` | Vercel deploy (manual trigger or auto on push to master) |
 
 ## Architecture
 
@@ -177,45 +178,56 @@ All mutation endpoints require role-based authentication via `x-staff-id` header
 
 ## Deployment
 
-### Production database
+AgentClinic deploys to **Vercel** with a **Neon** (Vercel Postgres) database. See the [deployment skill](specs/skills/deployment.md) for full instructions.
 
-Use the production Docker Compose file to start PostgreSQL:
+### One-time setup
+
+1. **Create a Vercel account** at https://vercel.com
+2. **Create a Vercel API token** at https://vercel.com/account/tokens
+3. **Add `VERCEL_TOKEN`** to your GitHub repository secrets (**Settings → Secrets and variables → Actions**)
+4. **Run the GitHub Action** → **Actions → Deploy to Vercel → Run workflow** to create the initial Vercel project
+
+### Deploy
+
+Trigger the deploy workflow from the GitHub UI:
 
 ```bash
-docker compose -f docker-compose.prod.yml up -d
+# Via GitHub Actions (recommended)
+# Go to: Actions → Deploy to Vercel → Run workflow
 ```
 
-Set a strong database password in your environment:
+Or via the Vercel CLI:
 
 ```bash
-export DB_PASSWORD=<strong-password>
-```
-
-### Build
-
-```bash
-npm run build
-npm start
+vercel --prod
 ```
 
 ### Environment variables
 
-Copy `.env.example` to `.env` and configure:
-
-```bash
-cp .env.example .env
-```
-
-Required variables:
+Set these in the **Vercel dashboard** under **Project Settings → Environment Variables**:
 
 | Variable | Description |
 |---|---|
-| `DATABASE_URL` | PostgreSQL connection string |
+| `DATABASE_URL` | PostgreSQL connection string (auto-injected by Neon) |
+
+### Database migrations
+
+After the database is provisioned, run migrations:
+
+```bash
+# Pull production env vars locally
+vercel env pull .env.production
+
+# Run migrations
+npm run db:migrate
+```
 
 ### Smoke test
-
-Run the E2E smoke test to verify all pages render correctly:
 
 ```bash
 npx playwright test e2e/smoke.spec.ts
 ```
+
+### Rollback
+
+In the Vercel dashboard, find the last working deployment and promote it to production.
