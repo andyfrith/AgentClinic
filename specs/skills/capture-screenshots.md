@@ -2,7 +2,7 @@
 
 Capture desktop screenshots of every app page and update `README.md` with previews.
 
-**Rule: All work must be done on a branch separate from `main`.** Never commit screenshots or README changes directly to `main`. Create a branch (e.g. `chore/capture-screenshots`), do the work there, then merge via PR.
+**Rule: All work must be done on a branch separate from `master`.** Never commit screenshots or README changes directly to `master`. Create a branch (e.g. `chore/capture-screenshots`), do the work there, then merge via PR.
 
 ## Prerequisites
 

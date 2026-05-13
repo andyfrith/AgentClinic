@@ -123,6 +123,12 @@ All mutation endpoints require role-based authentication via `x-staff-id` header
 
 ## Skills
 
+### Setup & planning
+
+- [Task Kickoff](specs/skills/task-kickoff.md) — branch creation, due diligence, environment setup
+- [Spec Drafting](specs/skills/spec-drafting.md) — standardized phase spec creation
+- [Scope Creep Guard](specs/skills/scope-creep-guard.md) — detection and management of scope expansion
+
 ### Pre-merge workflows
 
 - [Pre-merge Validation](specs/skills/pre-merge-validation.md)

@@ -18,6 +18,8 @@ Consult multiple relevant specs before deciding on an approach. If the brief con
 
 All work must be done on a branch separate from `master`. No commits, changes, or code generation on `master`. Branch naming: `<type>/<short-description>` (e.g. `feat/agent-filter`, `chore/capture-screenshots`).
 
+**Enforcement:** Before writing any code, run `git branch --show-current`. If the output is `master`, create a feature/chore branch immediately. The `task-kickoff` skill formalizes this as the first step of every task.
+
 ## Pre-merge checks
 
 Before merging any branch to `master`:
@@ -73,3 +75,17 @@ When implementing audit recommendations (from `specs/process-audit.md`), referen
 | `src/hooks/` | TanStack Query hooks |
 | `e2e/` | Playwright e2e tests |
 | `screenshots/` | Page screenshots for README |
+
+Skills provide specialized instructions and workflows for specific tasks.
+Use the skill tool to load a skill when a task matches its description.
+
+| Skill | File | Purpose |
+|---|---|---|
+| Task kickoff | `specs/skills/task-kickoff.md` | First step of any task: verify not on master, due diligence, branch creation, environment setup |
+| Spec drafting | `specs/skills/spec-drafting.md` | Standardized creation of requirements/plan/validation docs for new phases |
+| Scope creep guard | `specs/skills/scope-creep-guard.md` | Detection and management of scope expansion during spec drafting and implementation |
+| Pre-merge validation | `specs/skills/pre-merge-validation.md` | Quality gates before merging (typecheck, lint, test, build, changelog) |
+| Update changelog | `specs/skills/update-changelog.md` | Structured changelog entry management |
+| Capture screenshots | `specs/skills/capture-screenshots.md` | Playwright screenshot capture and README updates |
+| Code review | `specs/skills/code-review.md` | Checklist for reviewing PRs |
+| Deployment | `specs/skills/deployment.md` | Production build, database, smoke test, rollback |
