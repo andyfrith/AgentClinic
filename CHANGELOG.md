@@ -3,6 +3,20 @@
 All notable changes to this project are documented below.
 
 
+## 2026-05-13
+
+### Process
+- Add `task-kickoff` skill: formalized branch creation, due diligence, and environment setup as the first step of any task
+- Add `spec-drafting` skill: standardized templates for requirements/plan/validation phase docs
+- Add `scope-creep-guard` skill: formalized scope expansion detection and management during spec drafting and implementation
+- Fix `pre-merge-validation` skill: normalize branch references from `main` to `master` for project consistency
+- Fix `capture-screenshots` skill: normalize branch reference from `main` to `master`
+
+### Docs
+- Update AGENTS.md: reference all available skills in a skills table, strengthen master branch enforcement with `git branch --show-current` check
+- Update README.md: add new skills to the skills table under Setup & planning section
+
+
 ## 2026-05-12
 
 

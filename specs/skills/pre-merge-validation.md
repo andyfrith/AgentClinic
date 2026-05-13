@@ -2,7 +2,7 @@
 
 Run before merging any branch to ensure all quality gates pass.
 
-**Rule: All work must be done on a branch separate from `main`.** No commits, changes, or code generation should ever be made directly on `main`. Every change — regardless of size — must originate from a dedicated branch (e.g. `feat/...`, `fix/...`, `chore/...`).
+**Rule: All work must be done on a branch separate from `master`.** No commits, changes, or code generation should ever be made directly on `master`. Every change — regardless of size — must originate from a dedicated branch (e.g. `feat/...`, `fix/...`, `chore/...`).
 
 ## Prerequisites
 
@@ -32,6 +32,8 @@ A GitHub Actions workflow (`.github/workflows/ci.yml`) runs on every push to any
 - E2E smoke test (against a fresh database)
 
 **Rule**: PRs cannot be merged unless CI is green. This is the safety net that catches failures even if the developer forgets to run the pre-merge script locally. For new projects, a CI pipeline must be configured before the first merge.
+
+**Rule**: Before creating a branch, verify you are not on `master`. Run `git branch --show-current` as the first step of any task. If it says `master`, create your feature branch immediately before writing any code.
 
 ---
 
@@ -135,9 +137,9 @@ scripts/update-changelog.sh -
 
 ## Branch policy
 
-- **Never commit directly to `main`.** All changes — code, docs, config, screenshots, seeds, migrations — must go through a branch.
+- **Never commit directly to `master`.** All changes — code, docs, config, screenshots, seeds, migrations — must go through a branch.
 - Branch naming convention: `<type>/<short-description>` (e.g. `feat/agent-filter`, `fix/avatar-loading`, `chore/update-deps`, `docs/api-readme`).
-- The only exception is an emergency hotfix on a release branch, which still bypasses `main` directly.
+- The only exception is an emergency hotfix on a release branch, which still bypasses `master` directly.
 
 ---
 
@@ -147,11 +149,11 @@ When merging multiple branches in sequence (e.g., a series of audit branches tha
 
 **Rules for sequential merges:**
 
-1. **Run tests on the target branch before merging** — before merging branch B into `main`, ensure `main` merged into B passes all tests. This catches conflicts introduced by branch A.
+1. **Run tests on the target branch before merging** — before merging branch B into `master`, ensure `master` merged into B passes all tests. This catches conflicts introduced by branch A.
 
-2. **Re-run the pre-merge check after every merge in a sequence** — after merging each branch in a train, run `scripts/pre-merge-check.sh` on `main` before proceeding to merge the next branch.
+2. **Re-run the pre-merge check after every merge in a sequence** — after merging each branch in a train, run `scripts/pre-merge-check.sh` on `master` before proceeding to merge the next branch.
 
-3. **Validate the combined state** — when branches modify overlapping files (e.g., one branch adds route handlers, another adds tests for them), create a short-lived integration branch that merges both together first, run tests on it, then merge to `main`.
+3. **Validate the combined state** — when branches modify overlapping files (e.g., one branch adds route handlers, another adds tests for them), create a short-lived integration branch that merges both together first, run tests on it, then merge to `master`.
 
 4. **CI is your safety net** — the `.github/workflows/ci.yml` workflow runs on push to `master`. If a merged branch breaks `master`, CI will fail on the push event and you can revert before the next developer pulls.
 
@@ -159,7 +161,7 @@ When merging multiple branches in sequence (e.g., a series of audit branches tha
 
 ## Post-merge verification
 
-After any merge to `main`:
+After any merge to `master`:
 
 1. **Wait for CI to complete** — verify the `CI` workflow passes on the `master` branch.
 2. **Check for cascading failures** — if tests fail on `master` post-merge, revert the merge commit immediately and investigate.
@@ -181,7 +183,7 @@ This is the scenario that failed in practice: the pre-merge validation skill exi
 
 ## Pre-merge checklist
 
-- [ ] Changes are on a branch (not `main`) — verify with `git branch --show-current`
+- [ ] Changes are on a branch (not `master`) — verify with `git branch --show-current`
 - [ ] `npm run validate` passes (typecheck + lint + format + unit tests)
 - [ ] `npm run build` passes
 - [ ] `npx playwright test e2e/smoke.spec.ts` passes
