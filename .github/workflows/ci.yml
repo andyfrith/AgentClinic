@@ -36,6 +36,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          DATABASE_URL: postgres://localhost:5432/dummy
 
   e2e-smoke:
     runs-on: ubuntu-latest
