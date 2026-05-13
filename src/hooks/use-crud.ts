@@ -1,27 +1,35 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { authHeaders } from "@/lib/auth";
 
 type EntityType = "agents" | "ailments" | "therapies";
 
-function getStaffId(): string | null {
-  if (typeof window === "undefined") return null;
-  try {
-    const stored = localStorage.getItem("staff");
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return String(parsed.id);
-    }
-  } catch {}
-  return null;
-}
+type AgentInput = {
+  name: string;
+  avatar?: string;
+  specialty: string;
+  status?: string;
+  bio?: string;
+};
 
-function authHeaders(): Record<string, string> {
-  const id = getStaffId();
-  return id ? { "x-staff-id": id } : {};
-}
+type AilmentInput = {
+  name: string;
+  description?: string;
+  severity: "mild" | "moderate" | "severe";
+  category: string;
+};
+
+type TherapyInput = {
+  name: string;
+  description?: string;
+  duration: string;
+  sideEffects?: string[];
+};
+
+type EntityInput = AgentInput | AilmentInput | TherapyInput;
 
 function createEntity(type: EntityType) {
-  return async (data: Record<string, unknown>) => {
+  return async (data: EntityInput) => {
     const res = await fetch(`/api/${type}`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeaders() },
@@ -36,7 +44,7 @@ function createEntity(type: EntityType) {
 }
 
 function updateEntity(type: EntityType) {
-  return async ({ id, ...data }: { id: number } & Record<string, unknown>) => {
+  return async ({ id, ...data }: { id: number } & Partial<EntityInput>) => {
     const res = await fetch(`/api/${type}/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", ...authHeaders() },
